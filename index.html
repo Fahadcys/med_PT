@@ -127,6 +127,8 @@ td:first-child{font-weight:600;color:var(--ink)}
   <nav class="tabs" role="tablist" aria-label="Sections">
     <button class="tab" role="tab" data-t="ch1" id="tab-ch1">Dossier: Basics &amp; Ethics<i class="ar">الدوسية: الأساسيات والأخلاقيات</i></button>
     <button class="tab" role="tab" data-t="ch2" id="tab-ch2">Chapter 2: Pen Test Primer<i class="ar">الشابتر ٢</i></button>
+    <button class="tab" role="tab" data-t="ch3" id="tab-ch3">Chapter 3: Scanning<i class="ar">الشابتر ٣</i></button>
+    <button class="tab" role="tab" data-t="ch4" id="tab-ch4">Chapter 4: Malware &amp; Rootkits<i class="ar">الشابتر ٤</i></button>
     <button class="tab" role="tab" data-t="exam" id="tab-exam">Final Exam<i class="ar">الاختبار الشامل</i></button>
   </nav>
 </div></header>
@@ -386,17 +388,432 @@ td:first-child{font-weight:600;color:var(--ink)}
   </div>
 </div>
 
+<!-- ============ CHAPTER 3 ============ -->
+<div id="v-ch3" hidden>
+  <div class="hero">
+    <div class="tag">CHAPTER 3 · SCANNING</div>
+    <h1>Passive &amp; Active Scanning Tools &amp; Techniques<i class="ar">أدوات وتقنيات الفحص السلبي والفعّال</i></h1>
+    <p>Passive reconnaissance with Netcraft, BuiltWith, Shodan and Google, then active port scanning with Nmap and packet sniffing with Wireshark.<i class="ar">الاستطلاع السلبي بـ Netcraft وBuiltWith وShodan وGoogle، ثم فحص المنافذ الفعّال بـ Nmap وتحليل الحزم بـ Wireshark.</i></p>
+    <div class="meta"><span class="chip"><b>7</b> sections · أقسام</span><span class="chip"><b>30</b> questions · سؤال</span><span class="chip" id="best-c3">Best: — · أفضل نتيجة</span></div>
+  </div>
+  <div class="cols">
+    <nav class="toc" aria-label="Chapter 3 index">
+      <a href="#c3-pass">1. Passive scanning<i class="ar">الفحص السلبي</i></a>
+      <a href="#c3-tools">2. Netcraft &amp; BuiltWith<i class="ar">Netcraft وBuiltWith</i></a>
+      <a href="#c3-shodan">3. Shodan<i class="ar">Shodan</i></a>
+      <a href="#c3-social">4. Social media &amp; Google<i class="ar">التواصل وGoogle</i></a>
+      <a href="#c3-vs">5. Passive vs active<i class="ar">سلبي مقابل فعّال</i></a>
+      <a href="#c3-nmap">6. Port scanning (Nmap)<i class="ar">فحص المنافذ</i></a>
+      <a href="#c3-ports">7. Well-known ports<i class="ar">المنافذ المعروفة</i></a>
+      <a href="#c3-quiz" class="quizlink">Test yourself →<i class="ar">اختبر نفسك</i></a>
+    </nav>
+    <div>
+      <section class="sec" id="c3-pass">
+        <h2>1. Passive Scanning<i class="ar">١. الفحص السلبي</i></h2>
+        <p>Passive scanning is a method of vulnerability detection that relies on information gleaned from network data captured from a target computer <b>without direct interaction</b>.<i class="ar">الفحص السلبي طريقة لاكتشاف الثغرات تعتمد على معلومات مستخرجة من بيانات شبكة تم التقاطها من الجهاز الهدف <b>بدون أي تفاعل مباشر</b> معه.</i></p>
+        <div class="grid">
+          <div class="card"><span class="k">APPLICATIONS</span><h3>Packet sniffing<i class="ar">تحليل الحزم</i></h3>
+            <p>Sniffers can reveal the operating system, known protocols running on non-standard ports, and active network applications with known bugs.<i class="ar">تكشف أدوات الـ sniffing نظام التشغيل، والبروتوكولات المعروفة التي تعمل على منافذ غير قياسية، والتطبيقات النشطة التي فيها ثغرات معروفة.</i></p></div>
+          <div class="card"><span class="k">WHO USES IT</span><h3>Admin or intruder<i class="ar">مدير أو متسلل</i></h3>
+            <p>Done by a network administrator looking for weaknesses, or by an intruder as a preliminary step before an active attack.<i class="ar">يقوم به مدير الشبكة للبحث عن نقاط الضعف، أو المتسلل كخطوة تمهيدية قبل هجوم فعّال.</i></p></div>
+          <div class="card"><span class="k">THE CONCEPT</span><h3>Passive reconnaissance<i class="ar">الاستطلاع السلبي</i></h3>
+            <p>Gather information on a target website without actually connecting to it, so there is no chance of triggering an IDS or leaving a trace in the target's logs.<i class="ar">جمع معلومات عن موقع الهدف بدون الاتصال به فعلياً، فلا فرصة لتفعيل الـ IDS ولا يُترك أثر في سجلات الهدف.</i></p></div>
+        </div>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>Technologies used by a company can be found on <span class="en">netcraft.com</span>, <span class="en">shodan.io</span>, <span class="en">builtwith.com</span> and <span class="en">archive.org</span>.<i class="ar">التقنيات المستخدمة في الشركة تُعرف من netcraft.com وshodan.io وbuiltwith.com وarchive.org.</i></li>
+          <li>Document everything you find about the web server (BuiltWith, Netcraft) and any vulnerabilities Shodan identifies.<i class="ar">وثّق كل شي تلقاه عن سيرفر الويب (BuiltWith وNetcraft) وأي ثغرات يحددها Shodan.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c3-tools">
+        <h2>2. Netcraft and BuiltWith<i class="ar">٢. Netcraft وBuiltWith</i></h2>
+        <div class="tw"><table><thead><tr><th>Site<i class="ar">الموقع</i></th><th>What it tells you<i class="ar">وش يعطيك</i></th></tr></thead><tbody>
+          <tr><td>Netcraft</td><td>Which applications a website runs: operating system, web server, and uptime. Typing a site such as <span class="en">www.ChuckEasttom.com</span> returns a full report.<i class="ar">التطبيقات اللي يشغلها الموقع: نظام التشغيل، سيرفر الويب، ومدة التشغيل (uptime). مثلاً إدخال موقع مثل www.ChuckEasttom.com يطلع تقرير كامل.</i></td></tr>
+          <tr><td>BuiltWith</td><td>What the site is built with (scripting and programming languages) and a basic overview of its technologies. This decides your approach: techniques differ for an ASP.NET site vs a PHP site.<i class="ar">وش بُني عليه الموقع (لغات البرمجة والسكربتات) ونظرة عامة على تقنياته. وهذا يحدد أسلوبك: التقنيات تختلف بين موقع ASP.NET وموقع PHP.</i></td></tr>
+          <tr><td>archive.org</td><td>Historical copies of a website, useful for seeing what the target published before.<i class="ar">نسخ تاريخية للموقع، مفيدة لمعرفة وش كان الهدف ينشره سابقاً.</i></td></tr></tbody></table></div>
+        <h3>Worked example: the uptime clue<i class="ar">مثال: دلالة مدة التشغيل</i></h3>
+        <ol>
+          <li>Netcraft shows the site runs on IIS on Windows 2012 and has not been rebooted in 8 months.<i class="ar">Netcraft يبين أن الموقع على IIS وWindows 2012 ولم يُعد تشغيله منذ 8 أشهر.</i></li>
+          <li>Windows often needs a reboot after certain patches and service packs, so those patches were <b>not applied</b> in that time frame.<i class="ar">ويندوز كثيراً يحتاج إعادة تشغيل بعد بعض الـ patches والـ service packs، يعني هذي التحديثات <b>ما طُبقت</b> خلال هالفترة.</i></li>
+          <li>Search for Windows 2012 vulnerabilities found in the last 8 months. These are the ones the server is missing: a clue for where to start.<i class="ar">ابحث عن ثغرات Windows 2012 المكتشفة في آخر 8 أشهر. هذي هي الثغرات اللي ما سُدّت في السيرفر، وهي نقطة بداية ممتازة.</i></li>
+        </ol>
+      </section>
+
+      <section class="sec" id="c3-shodan">
+        <h2>3. Shodan<i class="ar">٣. Shodan</i></h2>
+        <p>Shodan (<span class="en">shodan.io</span>) is essentially a <b>search engine for vulnerabilities</b>. A free account is required, but it is invaluable to a pentester.<i class="ar">Shodan هو في الأساس <b>محرك بحث عن الثغرات</b>. يحتاج حساب مجاني، لكنه مفيد جداً للمختبر.</i></p>
+        <div class="tw"><table><thead><tr><th>Filter<i class="ar">الفلتر</i></th><th>Use<i class="ar">الاستخدام</i></th></tr></thead><tbody>
+          <tr><td><code>city:</code></td><td>Devices in a specific city.<i class="ar">أجهزة في مدينة محددة.</i></td></tr>
+          <tr><td><code>country:</code></td><td>Devices in a specific country.<i class="ar">أجهزة في دولة محددة.</i></td></tr>
+          <tr><td><code>geo:</code></td><td>Search by coordinates (latitude and longitude).<i class="ar">بحث بالإحداثيات (خط العرض والطول).</i></td></tr>
+          <tr><td><code>hostname:</code></td><td>Values matching a specific hostname.<i class="ar">قيم تطابق hostname محدد.</i></td></tr>
+          <tr><td><code>net:</code></td><td>Search by an IP or a /x CIDR range.<i class="ar">بحث بعنوان IP أو نطاق CIDR.</i></td></tr>
+          <tr><td><code>os:</code></td><td>Search by operating system.<i class="ar">بحث حسب نظام التشغيل.</i></td></tr>
+          <tr><td><code>port:</code></td><td>Find particular open ports.<i class="ar">إيجاد منافذ مفتوحة معينة.</i></td></tr>
+          <tr><td><code>before:</code> / <code>after:</code></td><td>Results within a timeframe.<i class="ar">نتائج ضمن فترة زمنية.</i></td></tr></tbody></table></div>
+        <h3>Example queries<i class="ar">أمثلة على الاستعلامات</i></h3>
+        <div class="grid">
+          <div class="card"><span class="k">DEFAULT PASSWORDS</span><p><code>default password country:US</code></p><p><code>default password hostname:chuckeasttom.com</code></p><p><code>default password city:Chicago</code></p></div>
+          <div class="card"><span class="k">SERVERS &amp; CAMERAS</span><p><code>apache city:"San Francisco"</code> finds Apache servers.<i class="ar">يلقى سيرفرات Apache.</i></p><p><code>webcamxp city:Chicago</code> finds webcams.<i class="ar">يلقى كاميرات ويب.</i></p><p><code>"iis/5.0"</code> finds old IIS.<i class="ar">يلقى IIS قديم.</i></p></div>
+        </div>
+        <div class="key"><h4>In a real pentest<i class="ar">في اختبار فعلي</i></h4><ul>
+          <li>Search the client's company domain on Shodan; attackers will use this tool too. Restrict the search to the client's hostname or domain.<i class="ar">ابحث عن دومين العميل في Shodan، والمهاجمون بيستخدمون الأداة نفسها. حدّد البحث بـ hostname أو دومين العميل.</i></li>
+          <li>Look for default passwords, old web servers, unsecured web cameras, and other weaknesses in the target network.<i class="ar">دوّر على كلمات المرور الافتراضية والسيرفرات القديمة وكاميرات الويب غير المؤمّنة وغيرها من نقاط الضعف.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c3-social">
+        <h2>4. Social Media and Google Searching<i class="ar">٤. وسائل التواصل والبحث في Google</i></h2>
+        <h3>Social media<i class="ar">وسائل التواصل الاجتماعي</i></h3>
+        <p>A company is easy to find on social media. You build a kind of <b>dossier</b> on the target:<i class="ar">من السهل إيجاد الشركة على وسائل التواصل، وتبني ما يشبه <b>ملفاً</b> عن الهدف:</i></p>
+        <ul>
+          <li>General information, e.g., a network admin complaining about a move to a new Windows version reveals the version in use and that issues are still unresolved.<i class="ar">معلومات عامة، مثلاً مدير شبكة يشتكي من الانتقال لنسخة ويندوز جديدة، فتعرف النسخة المستخدمة وأن فيها مشاكل لم تُحل.</i></li>
+          <li>Names of key individuals, which is useful for social engineering.<i class="ar">أسماء الأشخاص المهمين، وهذا مفيد في الهندسة الاجتماعية.</i></li></ul>
+        <h3>Google operators (Google dorking)<i class="ar">عوامل بحث Google</i></h3>
+        <div class="tw"><table><thead><tr><th>Operator<i class="ar">العامل</i></th><th>Example<i class="ar">مثال</i></th><th>Purpose<i class="ar">الغرض</i></th></tr></thead><tbody>
+          <tr><td><code>info:</code></td><td><code>info:http://www.google.com</code></td><td>Info about a site.<i class="ar">معلومات عن موقع.</i></td></tr>
+          <tr><td><code>related:</code></td><td><code>related:http://www.google.com</code></td><td>Find related sites.<i class="ar">إيجاد مواقع مشابهة.</i></td></tr>
+          <tr><td><code>cache:</code></td><td><code>cache:http://google.com search</code></td><td>Search the cache.<i class="ar">البحث في النسخة المخزنة.</i></td></tr>
+          <tr><td><code>inurl:</code></td><td><code>inurl:http://google search</code></td><td>Word in the URL.<i class="ar">كلمة داخل الرابط.</i></td></tr>
+          <tr><td><code>site:</code></td><td><code>site:http://somesite.net</code></td><td>Restrict search to a site.<i class="ar">حصر البحث في موقع.</i></td></tr>
+          <tr><td><code>~</code></td><td><code>search ~tips</code></td><td>Similar items.<i class="ar">كلمات مشابهة.</i></td></tr>
+          <tr><td><code>|</code></td><td><code>cats | dogs</code></td><td>The OR operator.<i class="ar">عامل OR.</i></td></tr>
+          <tr><td><code>filetype:</code></td><td><code>policies filetype:pdf site:xyz.com</code></td><td>PDF files about policies on xyz.com.<i class="ar">ملفات PDF عن السياسات في xyz.com.</i></td></tr></tbody></table></div>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li><code>policies site:xyz.com</code> gives insight into a company's policies; <code>filetype:pdf site:xyz.com</code> lists all its PDFs.<i class="ar"><code>policies site:xyz.com</code> يعطيك فكرة عن سياسات الشركة، و<code>filetype:pdf site:xyz.com</code> يعرض كل ملفات PDF الخاصة بها.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c3-vs">
+        <h2>5. Passive vs Active Scanning<i class="ar">٥. الفحص السلبي مقابل الفعّال</i></h2>
+        <div class="grid">
+          <div class="card"><span class="k">PASSIVE</span><h3>Passive<i class="ar">سلبي</i></h3>
+            <ul><li>Does not require connecting to the target system.<i class="ar">لا يتطلب الاتصال بالنظام الهدف.</i></li>
+            <li>An IDS cannot detect it, since no connection is made.<i class="ar">الـ IDS ما يقدر يكتشفه لأنه ما فيه اتصال.</i></li></ul></div>
+          <div class="card"><span class="k">ACTIVE</span><h3>Active<i class="ar">فعّال</i></h3>
+            <ul><li>Far more reliable.<i class="ar">أكثر موثوقية بكثير.</i></li>
+            <li>May be detected by the target system.<i class="ar">ممكن يكتشفه النظام الهدف.</i></li></ul></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c3-nmap">
+        <h2>6. Active Scanning: Port Scanning with Nmap<i class="ar">٦. الفحص الفعّال: فحص المنافذ بـ Nmap</i></h2>
+        <p>Port scanning means trying to contact each network port on the target and seeing which are open. There are <b>1,024 well-known ports</b> usually tied to specific services. Example: port 161 is SNMP, so if it is open an attacker may try SNMP-related attacks.<i class="ar">فحص المنافذ هو محاولة الاتصال بكل منفذ على الهدف ومعرفة المفتوح منها. فيه <b>1,024 منفذ معروف</b> مرتبطة بخدمات محددة. مثال: المنفذ 161 هو SNMP، فلو كان مفتوح قد يجرب المهاجم هجمات SNMP.</i></p>
+        <p>Nmap lets you customize a scan to be more or less stealthy and to target certain systems. A Windows GUI version is available at <span class="en">nmap.org/download.html</span>.<i class="ar">يتيح Nmap تخصيص الفحص ليكون أخفى أو أوضح واستهداف أنظمة معينة. وتوجد نسخة ويندوز بواجهة رسومية.</i></p>
+        <div class="tw"><table><thead><tr><th>Scan<i class="ar">الفحص</i></th><th>Flag<i class="ar">الأمر</i></th><th>How it works<i class="ar">طريقة العمل</i></th></tr></thead><tbody>
+          <tr><td>Ping scan</td><td><code>-sP</code></td><td>Simply pings the target. Many admins block incoming ICMP to stop it.<i class="ar">يرسل ping للهدف فقط. كثير من المدراء يحجبون ICMP الوارد لإيقافه.</i></td></tr>
+          <tr><td>Connect scan</td><td><code>-sT</code></td><td>Makes a complete connection. Most reliable but most likely to be detected.<i class="ar">يكمل اتصالاً كاملاً. الأكثر موثوقية لكنه الأسهل اكتشافاً.</i></td></tr>
+          <tr><td>SYN scan</td><td><code>-sS</code></td><td>Very stealthy (half-open). Sends a SYN, never answers the SYN/ACK. One packet per port.<i class="ar">خفي جداً (half-open). يرسل SYN ولا يرد على الـ SYN/ACK. حزمة واحدة لكل منفذ.</i></td></tr>
+          <tr><td>FIN scan</td><td><code>-sF</code></td><td>FIN (connection finished) flag set. Not unusual for systems to receive, so it is stealthy.<i class="ar">علم FIN مفعّل. حزمة عادية على الأنظمة فيعتبر خفياً.</i></td></tr>
+          <tr><td>XMAS scan</td><td><code>-sX</code></td><td>Several flags turned on, like a Christmas tree with many lights.<i class="ar">عدة أعلام مفعّلة مثل شجرة الكريسمس.</i></td></tr>
+          <tr><td>NULL scan</td><td>-</td><td>The opposite of XMAS: no flags turned on.<i class="ar">عكس XMAS: بدون أي علم مفعّل.</i></td></tr>
+          <tr><td>ACK scan</td><td>-</td><td>Sends an ACK without first receiving a SYN, to see how the target responds.<i class="ar">يرسل ACK بدون استلام SYN قبله لمعرفة كيف يرد الهدف.</i></td></tr>
+          <tr><td>OS detection</td><td><code>-O</code></td><td>Detects the operating system.<i class="ar">يكتشف نظام التشغيل.</i></td></tr></tbody></table></div>
+        <h3>How targets respond<i class="ar">كيف يرد الهدف</i></h3>
+        <div class="tw"><table><thead><tr><th>Scan<i class="ar">الفحص</i></th><th>Port closed<i class="ar">المنفذ مغلق</i></th><th>Port open<i class="ar">المنفذ مفتوح</i></th></tr></thead><tbody>
+          <tr><td>SYN</td><td>RST</td><td>SYN/ACK</td></tr>
+          <tr><td>FIN / XMAS</td><td>RST (reset)</td><td>No response<i class="ar">لا رد</i></td></tr></tbody></table></div>
+        <h3>Basic examples<i class="ar">أمثلة أساسية</i></h3>
+        <ul>
+          <li><code>nmap 192.168.1.1</code>: scan a single IP address.<i class="ar">فحص عنوان IP واحد.</i></li>
+          <li><code>nmap 192.168.1.1-20</code>: scan a range of IP addresses.<i class="ar">فحص نطاق من العناوين.</i></li>
+          <li><code>nmap -O -PT -T1 192.168.1.x</code>: detect OS, use a TCP scan, and use sneaky speed.<i class="ar">اكتشاف نظام التشغيل مع فحص TCP وبسرعة بطيئة خفية.</i></li></ul>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>ACK and NULL scans only work on UNIX systems.<i class="ar">فحصا ACK وNULL يعملان على أنظمة UNIX فقط.</i></li>
+          <li>Connect is the most reliable but most detectable; SYN (half-open) and FIN are the ones described as stealthy.<i class="ar">الـ Connect الأكثر موثوقية لكنه الأسهل اكتشافاً؛ أما SYN (half-open) وFIN فهما الموصوفان بأنهما خفيان.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c3-ports">
+        <h2>7. Well-Known Ports and Wireshark<i class="ar">٧. المنافذ المعروفة وWireshark</i></h2>
+        <div class="tw"><table><thead><tr><th>Port<i class="ar">المنفذ</i></th><th>Service<i class="ar">الخدمة</i></th><th>What it means to a pentester<i class="ar">وش يعني للمختبر</i></th></tr></thead><tbody>
+          <tr><td>20, 21</td><td>FTP</td><td>Common on web servers. Many FTP servers allow limited anonymous access, so at least try anonymous FTP.<i class="ar">شائع على سيرفرات الويب. كثير منها يسمح بدخول مجهول محدود، فجرّب الدخول المجهول على الأقل.</i></td></tr>
+          <tr><td>23</td><td>Telnet</td><td>Insecure command-line connection. Try to log on; even if it fails, run a packet sniffer to watch traffic on that port.<i class="ar">اتصال سطر أوامر غير آمن. جرب الدخول، وحتى لو فشل شغّل packet sniffer لمراقبة الحركة على المنفذ.</i></td></tr>
+          <tr><td>69</td><td>TFTP</td><td>Limited FTP over UDP. Often used with Cisco devices to retrieve digital certificates, so it hints at Cisco devices.<i class="ar">نسخة محدودة من FTP على UDP. تُستخدم غالباً مع أجهزة Cisco لجلب الشهادات الرقمية، فهي تلمّح لوجود أجهزة Cisco.</i></td></tr>
+          <tr><td>161</td><td>SNMP</td><td>Open port suggests SNMP-related attacks.<i class="ar">فتحه يوحي بإمكانية هجمات SNMP.</i></td></tr>
+          <tr><td>465, 993, 995</td><td>Encrypted email<i class="ar">بريد مشفر</i></td><td>The target takes basic security precautions, and you cannot read the emails.<i class="ar">الهدف يطبق احتياطات أمنية أساسية ولا تقدر تقرأ الإيميلات.</i></td></tr>
+          <tr><td>445</td><td>SMB</td><td>Used by Windows running Active Directory: this tells you it is a Windows domain.<i class="ar">يستخدمه ويندوز مع Active Directory، فيدل أنها شبكة Windows domain.</i></td></tr>
+          <tr><td>3389</td><td>Remote Desktop</td><td>Notoriously insecure. If open, at least attempt to remote desktop in.<i class="ar">معروف بضعف أمانه. لو كان مفتوح جرّب الدخول عن بعد على الأقل.</i></td></tr></tbody></table></div>
+        <h3>Wireshark<i class="ar">Wireshark</i></h3>
+        <p>One of the most widely known network packet sniffers: free, versatile, and with a convenient GUI for examining network traffic.<i class="ar">من أشهر أدوات تحليل حزم الشبكة (packet sniffers): مجانية ومتعددة الاستخدامات وبواجهة رسومية مريحة لفحص حركة الشبكة.</i></p>
+      </section>
+
+      <section class="sec" id="c3-quiz"><h2>Test yourself: Chapter 3<i class="ar">اختبر نفسك: الشابتر ٣</i></h2><div id="quiz-c3"></div></section>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 4 ============ -->
+<div id="v-ch4" hidden>
+  <div class="hero">
+    <div class="tag">CHAPTER 4 · MALWARE &amp; ROOTKITS</div>
+    <h1>Malware, Privilege Escalation &amp; Rootkits<i class="ar">البرمجيات الخبيثة ورفع الصلاحيات والـ Rootkits</i></h1>
+    <p>The malware zoo, infection and persistence, detection, worms, then privilege escalation, keyloggers and rootkits.<i class="ar">حديقة البرمجيات الخبيثة، العدوى والبقاء، الكشف، الديدان، ثم رفع الصلاحيات والـ keyloggers والـ rootkits.</i></p>
+    <div class="meta"><span class="chip"><b>9</b> sections · أقسام</span><span class="chip"><b>45</b> questions · سؤال</span><span class="chip" id="best-c4">Best: — · أفضل نتيجة</span></div>
+  </div>
+  <div class="cols">
+    <nav class="toc" aria-label="Chapter 4 index">
+      <a href="#c4-what">1. What is malware<i class="ar">ما هو الـ malware</i></a>
+      <a href="#c4-inf">2. Infection methods<i class="ar">طرق العدوى</i></a>
+      <a href="#c4-auto">3. Auto start<i class="ar">التشغيل التلقائي</i></a>
+      <a href="#c4-rk1">4. Rootkits in the OS<i class="ar">الـ Rootkits في النظام</i></a>
+      <a href="#c4-bd">5. Backdoors<i class="ar">الأبواب الخلفية</i></a>
+      <a href="#c4-det">6. Detection<i class="ar">الكشف</i></a>
+      <a href="#c4-worm">7. Worms<i class="ar">الديدان</i></a>
+      <a href="#c4-priv">8. Privilege escalation<i class="ar">رفع الصلاحيات</i></a>
+      <a href="#c4-rk2">9. Rootkits in depth<i class="ar">الـ Rootkits بالتفصيل</i></a>
+      <a href="#c4-quiz" class="quizlink">Test yourself →<i class="ar">اختبر نفسك</i></a>
+    </nav>
+    <div>
+      <section class="sec" id="c4-what">
+        <h2>1. What Is Malware? The Malware Zoo<i class="ar">١. ما هو الـ Malware؟ حديقة البرمجيات الخبيثة</i></h2>
+        <p>Malware is a set of instructions that run on your computer and make your system do something <b>the attacker wants</b>.<i class="ar">الـ Malware مجموعة تعليمات تشتغل على جهازك وتخلي نظامك يسوي شي <b>يريده المهاجم</b>.</i></p>
+        <div class="key"><h4>What is it good for?<i class="ar">وش فايدته للمهاجم؟</i></h4><ul>
+          <li>Steal personal information.<i class="ar">سرقة المعلومات الشخصية.</i></li>
+          <li>Delete files.<i class="ar">حذف الملفات.</i></li>
+          <li>Click fraud.<i class="ar">الاحتيال بالنقرات (click fraud).</i></li>
+          <li>Steal software serial numbers.<i class="ar">سرقة أرقام تسلسلية للبرامج.</i></li>
+          <li>Use your computer as a relay.<i class="ar">استخدام جهازك كوسيط (relay).</i></li></ul></div>
+        <div class="grid">
+          <div class="card"><span class="k">VIRUS</span><h3>Virus<i class="ar">فيروس</i></h3><p>A program that can infect other programs by modifying them to include a, possibly evolved, version of itself (Fred Cohen, 1983).<i class="ar">برنامج يقدر يصيب برامج أخرى بتعديلها لتحمل نسخة منه، وقد تكون متطورة (Fred Cohen، 1983).</i></p>
+            <p><b>Polymorphic:</b> uses a polymorphic engine to mutate while keeping the original algorithm intact (packer). <b>Metamorphic:</b> changes after each infection.<i class="ar"><b>Polymorphic:</b> يستخدم محرك تحوّل ليتغير مع بقاء الخوارزمية الأصلية (packer). <b>Metamorphic:</b> يتغير بعد كل عدوى.</i></p></div>
+          <div class="card"><span class="k">TROJAN HORSE</span><h3>Trojan<i class="ar">حصان طروادة</i></h3><p>Appears to perform a desirable function but in fact performs undisclosed malicious functions that allow unauthorized access to the victim computer.<i class="ar">يبدو أنه يؤدي وظيفة مفيدة لكنه فعلياً ينفذ وظائف خبيثة مخفية تتيح وصولاً غير مصرّح للجهاز الضحية.</i></p></div>
+          <div class="card"><span class="k">ROOTKIT</span><h3>Rootkit<i class="ar">روت كت</i></h3><p>A component that uses <b>stealth</b> to maintain a persistent and undetectable presence on the machine (Symantec).<i class="ar">مكوّن يستخدم <b>الإخفاء (stealth)</b> ليحافظ على وجود دائم وغير مكتشف على الجهاز (Symantec).</i></p></div>
+          <div class="card"><span class="k">WORM</span><h3>Worm<i class="ar">دودة</i></h3><p>A self-replicating program that uses a network to send copies of itself to other nodes, <b>without any user intervention</b>.<i class="ar">برنامج ينسخ نفسه ذاتياً ويستخدم الشبكة لإرسال نسخ منه لأجهزة أخرى <b>بدون أي تدخل من المستخدم</b>.</i></p></div>
+          <div class="card"><span class="k">ALSO IN THE ZOO</span><h3>Backdoor, scareware, adware<i class="ar">باب خلفي، scareware، adware</i></h3><p>Backdoor gives remote access; scareware scares the user into acting; adware pushes ads.<i class="ar">الـ backdoor يعطي وصولاً عن بعد، والـ scareware يخوّف المستخدم ليتصرف، والـ adware يعرض إعلانات.</i></p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c4-inf">
+        <h2>2. Infection Methods<i class="ar">٢. طرق العدوى</i></h2>
+        <h3>What can be infected<i class="ar">وش الذي يمكن إصابته</i></h3>
+        <p>Executables, interpreted files, the kernel, services, the MBR, and the hypervisor.<i class="ar">الملفات التنفيذية، والملفات المفسَّرة (interpreted)، والـ kernel، والخدمات، والـ MBR، والـ hypervisor.</i></p>
+        <h3>How a virus attaches to an executable<i class="ar">كيف يلتصق الفيروس بالملف التنفيذي</i></h3>
+        <div class="tw"><table><thead><tr><th>Technique<i class="ar">الأسلوب</i></th><th>Where the malware goes<i class="ar">مكان الكود الخبيث</i></th></tr></thead><tbody>
+          <tr><td>Overwriting</td><td>The malware overwrites the targeted executable.<i class="ar">الكود الخبيث يكتب فوق الملف التنفيذي المستهدف.</i></td></tr>
+          <tr><td>Prepending</td><td>Attached at the <b>beginning</b> of the host file.<i class="ar">يُلصق في <b>بداية</b> الملف المضيف.</i></td></tr>
+          <tr><td>Appending</td><td>Inserted at the <b>end</b> of the file. The goal is not to harm the host program but to modify it to hold the virus code.<i class="ar">يُدرج في <b>نهاية</b> الملف. الهدف ليس إتلاف البرنامج بل تعديله ليحمل الكود الفيروسي.</i></td></tr>
+          <tr><td>Cavity</td><td>Installs itself in empty space inside the file without damaging the program.<i class="ar">يثبّت نفسه في مساحة فارغة داخل الملف بدون إتلاف البرنامج.</i></td></tr>
+          <tr><td>Multi-cavity</td><td>Places bits and pieces of its code in several open spaces.<i class="ar">يوزع أجزاء من كوده على عدة مساحات فارغة.</i></td></tr></tbody></table></div>
+        <h3>Packers<i class="ar">الـ Packers</i></h3>
+        <p>A packer is a tool used to mask a malicious file. It can encrypt, compress, or change the file's format so it looks like something else entirely. The infected host holds a packer plus the payload.<i class="ar">الـ packer أداة لإخفاء الملف الخبيث؛ تقدر تشفّر أو تضغط أو تغيّر صيغة الملف ليبدو شيئاً آخر تماماً. الملف المصاب يحمل packer وpayload.</i></p>
+        <div class="grid">
+          <div class="card"><h3>Packer functionalities<i class="ar">وظائف الـ Packer</i></h3><ul>
+            <li>Compress<i class="ar">ضغط</i></li><li>Encrypt<i class="ar">تشفير</i></li><li>Randomize (polymorphism)<i class="ar">عشوائية (polymorphism)</i></li>
+            <li>Anti-debug techniques (int / fake jmp)<i class="ar">تقنيات مضادة للـ debugging</i></li><li>Add junk code<i class="ar">إضافة كود زائد</i></li><li>Anti-VM<i class="ar">مضاد للأجهزة الافتراضية</i></li><li>Virtualization<i class="ar">محاكاة افتراضية</i></li></ul></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c4-auto">
+        <h2>3. Auto Start (Persistence)<i class="ar">٣. التشغيل التلقائي (البقاء)</i></h2>
+        <div class="grid">
+          <div class="card"><span class="k">WINDOWS</span><h3>Windows autostart<i class="ar">التشغيل التلقائي في ويندوز</i></h3><ul>
+            <li>Startup folder: <code>...\Start Menu\Programs\Startup</code><i class="ar">مجلد Startup.</i></li>
+            <li><code>Win.ini</code>: <code>run=</code> or <code>load=</code><i class="ar">في ملف win.ini.</i></li>
+            <li><code>System.ini</code>: <code>shell="myexplorer.exe"</code></li>
+            <li>Wininit, <code>Config.sys</code></li>
+            <li>Associate a known extension (<code>.doc</code>) with the malware.<i class="ar">ربط امتداد معروف (.doc) بالـ malware.</i></li>
+            <li>Registry key <code>HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code><i class="ar">مفتاح Registry.</i></li>
+            <li>A task in the Task Scheduler.<i class="ar">مهمة في Task Scheduler.</i></li>
+            <li>Run as a service.<i class="ar">تشغيله كخدمة.</i></li></ul></div>
+          <div class="card"><span class="k">UNIX</span><h3>Unix autostart<i class="ar">التشغيل التلقائي في يونكس</i></h3><ul>
+            <li><code>init.d</code>, <code>/etc/rc.local</code></li>
+            <li><code>.login</code>, <code>.xsession</code></li>
+            <li><code>crontab</code>, <code>crontab -e</code>, <code>/etc/crontab</code></li></ul></div>
+          <div class="card"><span class="k">MACRO VIRUS</span><h3>Macro virus<i class="ar">فيروس الماكرو</i></h3><p>Uses the built-in script engine. Callbacks used (Word): <code>AutoExec()</code>, <code>AutoClose()</code>, <code>AutoOpen()</code>, <code>AutoNew()</code>.<i class="ar">يستخدم محرك السكربتات المدمج. دوال الـ callback في Word: AutoExec وAutoClose وAutoOpen وAutoNew.</i></p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c4-rk1">
+        <h2>4. Rootkits Inside the OS<i class="ar">٤. الـ Rootkits داخل نظام التشغيل</i></h2>
+        <div class="grid">
+          <div class="card"><span class="k">USERLAND</span><h3>Userland rootkit<i class="ar">روت كت مستوى المستخدم</i></h3>
+            <p><b>Performs:</b> replaces <code>login</code>, <code>sshd</code>, <code>passwd</code>.<i class="ar"><b>ينفّذ:</b> يستبدل login وsshd وpasswd.</i></p>
+            <p><b>Hides activity:</b> <code>ps</code>, <code>netstat</code>, <code>ls</code>, <code>find</code>, <code>du</code>.<i class="ar"><b>يخفي النشاط:</b> أوامر ps وnetstat وls وfind وdu.</i></p></div>
+          <div class="card"><span class="k">KERNEL</span><h3>Kernel rootkit<i class="ar">روت كت مستوى النواة</i></h3>
+            <p>The kernel handles process management, file access, memory management and network management. The rootkit subverts it to hide <b>processes, files and network traffic</b>.<i class="ar">النواة تدير العمليات والملفات والذاكرة والشبكة. الـ rootkit يخترقها ليخفي <b>العمليات والملفات وحركة الشبكة</b>.</i></p>
+            <p><b>Techniques:</b> kernel patch, Loadable Kernel Module (LKM), kernel memory patching (<code>/dev/kmem</code>).<i class="ar"><b>التقنيات:</b> تعديل النواة، وحدة نواة قابلة للتحميل (LKM)، وتعديل ذاكرة النواة (/dev/kmem).</i></p></div>
+          <div class="card"><span class="k">MBR / BOOTKIT</span><h3>Bootkit<i class="ar">بوت كت</i></h3>
+            <p>Can avoid all OS protections, because the OS assumes the system was in a trusted state when the boot loader took control.<i class="ar">يتجاوز كل حمايات النظام، لأن النظام يفترض أن الجهاز كان في حالة موثوقة لحظة استلام الـ boot loader.</i></p>
+            <p><b>Vboot:</b> works on every Windows (Vista, 7), about 3 KB, bypasses checks by letting them run and then patching in flight, and communicates via ping.<i class="ar"><b>Vboot:</b> يعمل على كل ويندوز (Vista، 7)، حجمه حوالي 3 كيلوبايت، يتجاوز الفحوصات بتركها تشتغل ثم التعديل أثناء التنفيذ، ويتواصل عبر ping.</i></p></div>
+          <div class="card"><span class="k">HYPERVISOR</span><h3>Hypervisor rootkit<i class="ar">روت كت الـ Hypervisor</i></h3>
+            <p>Sits between the hardware and the target OS as a virtual machine monitor, so the original OS and its apps run unaware inside a VM.<i class="ar">يجلس بين العتاد ونظام التشغيل الهدف كمراقب أجهزة افتراضية، فيشتغل النظام الأصلي وتطبيقاته داخل VM وهم ما يدرون.</i></p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c4-bd">
+        <h2>5. Backdoor Communication<i class="ar">٥. اتصالات الأبواب الخلفية</i></h2>
+        <div class="grid">
+          <div class="card"><span class="k">TCP</span><h3>Basic<i class="ar">أساسي</i></h3><p>Attacker connects to the infected host over TCP.<i class="ar">المهاجم يتصل بالجهاز المصاب عبر TCP.</i></p></div>
+          <div class="card"><span class="k">TCP</span><h3>Reverse<i class="ar">عكسي</i></h3><p>The infected host connects out to the attacker over TCP, which helps pass firewalls that block inbound connections.<i class="ar">الجهاز المصاب هو من يتصل بالمهاجم عبر TCP، وهذا يساعد على تجاوز جدران الحماية التي تمنع الاتصالات الواردة.</i></p></div>
+          <div class="card"><span class="k">ICMP</span><h3>Covert<i class="ar">سري</i></h3><p>Communication hidden inside ICMP.<i class="ar">الاتصال مخفي داخل ICMP.</i></p></div>
+          <div class="card"><span class="k">RDV</span><h3>Rendezvous point<i class="ar">نقطة التقاء</i></h3><p>Attacker and infected host meet at a rendezvous (RDV) point instead of talking directly.<i class="ar">المهاجم والجهاز المصاب يلتقيان عند نقطة التقاء (RDV) بدل الاتصال المباشر.</i></p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c4-det">
+        <h2>6. Detection<i class="ar">٦. الكشف</i></h2>
+        <div class="tw"><table><thead><tr><th>Method<i class="ar">الطريقة</i></th><th>Idea<i class="ar">الفكرة</i></th></tr></thead><tbody>
+          <tr><td>Anti-virus</td><td>Analyzes system behavior and binaries to decide if something is a virus. Types: <b>scanner</b> and <b>real-time monitor</b>.<i class="ar">يحلل سلوك النظام والملفات التنفيذية ليقرر هل هي فيروس. الأنواع: <b>scanner</b> و<b>real-time monitor</b>.</i></td></tr>
+          <tr><td>Signature</td><td>Find a string that identifies the virus, like a fingerprint.<i class="ar">إيجاد سلسلة تعرّف الفيروس، مثل البصمة.</i></td></tr>
+          <tr><td>Heuristics</td><td>Analyze program behavior: network access, file open, attempt to delete a file, attempt to modify the boot sector.<i class="ar">تحليل سلوك البرنامج: الوصول للشبكة، فتح ملف، محاولة حذف ملف، محاولة تعديل boot sector.</i></td></tr>
+          <tr><td>Checksum</td><td>Compute a checksum of good binaries and configuration files and detect changes by comparison. At some point there will be more malware than "goodware".<i class="ar">حساب checksum للملفات السليمة وملفات الإعداد واكتشاف التغيير بالمقارنة. في وقت ما بيكون الـ malware أكثر من الـ goodware.</i></td></tr>
+          <tr><td>Sandbox</td><td>Run the executable in a VM and observe file activity, network, and memory.<i class="ar">تشغيل الملف في VM ومراقبة نشاط الملفات والشبكة والذاكرة.</i></td></tr>
+          <tr><td>Dealing with a packer</td><td>Launch the exe, wait until it unpacks, then dump the memory.<i class="ar">شغّل الملف، انتظر حتى يفك نفسه، ثم اسحب (dump) الذاكرة.</i></td></tr></tbody></table></div>
+        <div class="key"><h4>Cohen's impossibility result<i class="ar">نتيجة الاستحالة عند Cohen</i></h4><ul>
+          <li>It is not possible to build a perfect virus/malware detector.<i class="ar">لا يمكن بناء كاشف مثالي للفيروسات.</i></li>
+          <li>Diagonal argument: let <b>P</b> be a perfect detector and <b>V</b> a virus that can call P. If P(V) = true, V halts; if P(V) = false, V spreads. Either way P is wrong.<i class="ar">البرهان القطري: لنفرض أن <b>P</b> كاشف مثالي و<b>V</b> فيروس يستطيع استدعاء P. إذا P(V) = true يتوقف V، وإذا false ينتشر. في الحالتين P يخطئ.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c4-worm">
+        <h2>7. Worms<i class="ar">٧. الديدان</i></h2>
+        <h3>How worms propagate<i class="ar">كيف تنتشر الديدان</i></h3>
+        <div class="tw"><table><thead><tr><th>Type<i class="ar">النوع</i></th><th>Behavior<i class="ar">السلوك</i></th></tr></thead><tbody>
+          <tr><td>Scanning</td><td>Chooses "random" addresses.<i class="ar">تختار عناوين "عشوائية".</i></td></tr>
+          <tr><td>Coordinated scanning</td><td>Different worm instances scan different addresses.<i class="ar">نسخ مختلفة من الدودة تفحص عناوين مختلفة.</i></td></tr>
+          <tr><td>Flash</td><td>Assembles a tree of vulnerable hosts in advance and propagates along it. Not observed in the wild yet; potentially 10<sup>6</sup> hosts in under 2 seconds.<i class="ar">تجمّع مسبقاً شجرة بالأجهزة الضعيفة وتنتشر عبرها. لم تُرصد فعلياً بعد؛ يمكن نظرياً إصابة مليون جهاز في أقل من ثانيتين.</i></td></tr>
+          <tr><td>Meta-server</td><td>Asks a server for hosts to infect (e.g., Google for "powered by phpbb").<i class="ar">تسأل سيرفر عن أجهزة لإصابتها (مثلاً Google لعبارة "powered by phpbb").</i></td></tr>
+          <tr><td>Topological</td><td>Uses information from infected hosts: web server logs, email address books, config files, SSH known hosts.<i class="ar">تستخدم معلومات من الأجهزة المصابة: سجلات سيرفر الويب، دفاتر عناوين البريد، ملفات الإعداد، SSH known hosts.</i></td></tr>
+          <tr><td>Contagion</td><td>Propagates parasitically along with normally initiated communication.<i class="ar">تنتشر طفيلياً مع الاتصالات العادية.</i></td></tr></tbody></table></div>
+        <h3>Consequences<i class="ar">العواقب</i></h3>
+        <p>ATM systems unavailable, phone network overloaded (no 911), 5 DNS root servers down, planes delayed.<i class="ar">تعطل أجهزة الصراف، وازدحام شبكة الهاتف (بلا طوارئ 911)، وسقوط 5 من سيرفرات DNS الجذرية، وتأخر الطائرات.</i></p>
+        <h3>Detection and defense<i class="ar">الكشف والدفاع</i></h3>
+        <ul>
+          <li><b>Honeyfarms:</b> collections of honeypots fed by a network telescope. Any outbound connection from the honeyfarm means a worm. A signature is distilled from the inbound/outbound traffic.<i class="ar"><b>Honeyfarms:</b> مجموعات honeypots تغذيها network telescope. أي اتصال صادر من الـ honeyfarm يعني دودة. ويُستخرج توقيع من الحركة الواردة والصادرة.</i></li>
+          <li>If the telescope covers N addresses, detection is expected when the worm has infected 1/N of the population.<i class="ar">لو غطّى الـ telescope عدد N من العناوين، يُتوقع الكشف عندما تصيب الدودة 1/N من المجتمع.</i></li>
+          <li><b>Scan suppressors:</b> network elements that block traffic from hosts making failed connection attempts to too many other hosts.<i class="ar"><b>Scan suppressors:</b> عناصر شبكية تحجب حركة الأجهزة التي تفشل في الاتصال بعدد كبير من الأجهزة الأخرى.</i></li>
+          <li>Writing a signature takes 5 minutes to several weeks, plus several hours or more of testing.<i class="ar">كتابة التوقيع تأخذ من 5 دقائق إلى عدة أسابيع، مع ساعات أو أكثر للاختبار.</i></li></ul>
+        <h3>Signature inference and content sifting<i class="ar">استنتاج التوقيع والـ content sifting</i></h3>
+        <p>The challenge is learning a content signature for each new worm automatically, potentially in under a second (Autograph, Automated Worm Fingerprinting). Signatures then enable content filtering.<i class="ar">التحدي هو تعلّم توقيع المحتوى لكل دودة جديدة تلقائياً، وربما في أقل من ثانية. ثم تُستخدم التواقيع في تصفية المحتوى.</i></p>
+        <div class="key"><h4>Content sifting<i class="ar">Content sifting</i></h4><ul>
+          <li>Assume a (relatively) unique invariant bitstring <b>W</b> exists across all instances of a worm.<i class="ar">نفترض وجود سلسلة بتات ثابتة فريدة نسبياً <b>W</b> في كل نسخ الدودة.</i></li>
+          <li><b>Content prevalence:</b> W is more common in traffic than other bitstrings of the same length.<i class="ar"><b>انتشار المحتوى:</b> W أكثر شيوعاً في الحركة من سلاسل أخرى بنفس الطول.</i></li>
+          <li><b>Address dispersion:</b> the packets containing W address a disproportionate number of distinct sources and destinations.<i class="ar"><b>تشتت العناوين:</b> الحزم التي تحتوي W تخاطب عدداً كبيراً من المصادر والوجهات المختلفة.</i></li>
+          <li>Find W with high prevalence and high dispersion, and drop that traffic. Only 0.6% of 40-byte substrings repeat more than 3 times in a minute.<i class="ar">نبحث عن W ذات انتشار وتشتت عاليين ونحذف تلك الحركة. فقط 0.6% من السلاسل بطول 40 بايت تتكرر أكثر من 3 مرات في الدقيقة.</i></li></ul></div>
+        <h3>Challenges<i class="ar">التحديات</i></h3>
+        <ul>
+          <li><b>Computation:</b> at 1 Gbps you have about 12 µs per packet, at 10 Gbps 1.2 µs; every byte must be inspected and memory references dominate.<i class="ar"><b>الحوسبة:</b> عند 1 جيجابت تملك حوالي 12 ميكروثانية لكل حزمة، وعند 10 جيجابت 1.2 ميكروثانية؛ ويجب فحص كل بايت والذاكرة هي العائق الأكبر.</i></li>
+          <li><b>State:</b> on a fully loaded 1 Gbps link a naive implementation can consume 100 MB/s for the table.<i class="ar"><b>الحالة (State):</b> على رابط 1 جيجابت ممتلئ قد يستهلك التنفيذ الساذج 100 ميجابايت/ث للجدول.</i></li></ul>
+      </section>
+
+      <section class="sec" id="c4-priv">
+        <h2>8. Privilege Escalation and Executing Applications<i class="ar">٨. رفع الصلاحيات وتنفيذ التطبيقات</i></h2>
+        <p>An attacker gains network access with a <b>non-admin account</b>, then needs administrative privileges. Privilege escalation exploits design flaws, programming errors, bugs, and configuration oversights in the OS and applications. With those privileges the attacker can view sensitive information, delete files, or install viruses, trojans and worms.<i class="ar">المهاجم يدخل الشبكة بحساب <b>غير إداري</b> ثم يحتاج صلاحيات إدارية. رفع الصلاحيات يستغل عيوب التصميم والأخطاء البرمجية والـ bugs وأخطاء الإعدادات في النظام والتطبيقات. وبهذي الصلاحيات يقدر يشوف المعلومات الحساسة ويحذف الملفات ويثبّت فيروسات وtrojans وديدان.</i></p>
+        <div class="grid">
+          <div class="card"><span class="k">VERTICAL</span><h3>Vertical escalation<i class="ar">رفع عمودي</i></h3><p>Gaining <b>higher</b> privileges than the existing ones.<i class="ar">الحصول على صلاحيات <b>أعلى</b> من الموجودة.</i></p></div>
+          <div class="card"><span class="k">HORIZONTAL</span><h3>Horizontal escalation<i class="ar">رفع أفقي</i></h3><p>Acquiring the <b>same level</b> of privileges but assuming the identity of another user with similar privileges.<i class="ar">الحصول على <b>نفس المستوى</b> من الصلاحيات لكن بانتحال هوية مستخدم آخر بصلاحيات مماثلة.</i></p></div>
+        </div>
+        <h3>DLL hijacking<i class="ar">اختطاف الـ DLL</i></h3>
+        <ol>
+          <li>Most Windows applications do not use the fully qualified path when loading an external DLL; they search the directory they were loaded from first.<i class="ar">أغلب تطبيقات ويندوز لا تستخدم المسار الكامل عند تحميل DLL خارجي، بل تبحث أولاً في المجلد الذي حُمّلت منه.</i></li>
+          <li>The attacker places a malicious DLL in the application directory.<i class="ar">المهاجم يضع DLL خبيث في مجلد التطبيق.</i></li>
+          <li>The application loads the malicious DLL instead of the real one, and the attacker gains remote access.<i class="ar">التطبيق يحمّل الـ DLL الخبيث بدل الحقيقي، فيحصل المهاجم على وصول عن بعد.</i></li></ol>
+        <div class="tw"><table><thead><tr><th>Term<i class="ar">المصطلح</i></th><th>Definition<i class="ar">التعريف</i></th></tr></thead><tbody>
+          <tr><td>DLL</td><td>A file format holding code and procedures for Windows programs, shared by many programs at once to save memory.<i class="ar">صيغة ملف تحمل أكواداً وإجراءات لبرامج ويندوز، تشاركها عدة برامج بنفس الوقت لتوفير الذاكرة.</i></td></tr>
+          <tr><td>GAC</td><td>Global Assembly Cache: a Windows folder storing .NET assemblies shared by all applications.<i class="ar">مجلد في ويندوز يخزن .NET assemblies المشتركة بين كل التطبيقات.</i></td></tr>
+          <tr><td>CIL</td><td>Common Intermediate Language (formerly MSIL): lowest-level human-readable language defined by the CLI spec, used by .NET Framework, .NET Core and Mono.<i class="ar">أدنى لغة مقروءة بشرياً حسب مواصفة CLI، تستخدمها .NET Framework و.NET Core وMono.</i></td></tr>
+          <tr><td>Ngen.exe</td><td>Native Image Generator: creates native images of compiled machine code to improve managed applications' performance, instead of JIT compiling.<i class="ar">يولّد native images بكود آلة مترجم لتحسين أداء التطبيقات المُدارة بدل الترجمة اللحظية JIT.</i></td></tr>
+          <tr><td>Attack vector</td><td>A path or means by which an attacker gains access to deliver a payload or malicious outcome, including the human element.<i class="ar">مسار أو وسيلة يدخل بها المهاجم لتسليم payload أو تحقيق نتيجة خبيثة، بما فيها العنصر البشري.</i></td></tr>
+          <tr><td>Vector (malware)</td><td>The method malicious code uses to propagate itself or infect a computer.<i class="ar">الطريقة التي يستخدمها الكود الخبيث للانتشار أو إصابة جهاز.</i></td></tr></tbody></table></div>
+        <h3>How to defend against privilege escalation<i class="ar">كيف تدافع ضد رفع الصلاحيات</i></h3>
+        <div class="grid">
+          <div class="card"><ul>
+            <li>Restrict interactive logon privileges.<i class="ar">تقييد صلاحيات تسجيل الدخول التفاعلي.</i></li>
+            <li>Use encryption to protect sensitive data.<i class="ar">استخدام التشفير لحماية البيانات الحساسة.</i></li>
+            <li>Run users and applications on least privileges.<i class="ar">تشغيل المستخدمين والتطبيقات بأقل صلاحيات.</i></li>
+            <li>Reduce the amount of code running with a particular privilege.<i class="ar">تقليل الكود الذي يعمل بصلاحية معينة.</i></li>
+            <li>Implement multi-factor authentication and authorization.<i class="ar">تطبيق مصادقة وتفويض متعددي العوامل.</i></li></ul></div>
+          <div class="card"><ul>
+            <li>Debug using bounds checkers and stress tests.<i class="ar">التصحيح باستخدام bounds checkers واختبارات الضغط.</i></li>
+            <li>Run services as unprivileged accounts.<i class="ar">تشغيل الخدمات بحسابات بلا صلاحيات.</i></li>
+            <li>Test OS and application coding errors and bugs thoroughly.<i class="ar">اختبار أخطاء الكود والـ bugs في النظام والتطبيقات بدقة.</i></li>
+            <li>Implement privilege separation to limit the scope of errors and bugs.<i class="ar">تطبيق فصل الصلاحيات لتحديد نطاق الأخطاء.</i></li>
+            <li>Patch the systems regularly.<i class="ar">تحديث الأنظمة باستمرار.</i></li></ul></div>
+        </div>
+        <h3>Executing applications<i class="ar">تنفيذ التطبيقات</i></h3>
+        <p>Attackers execute malicious applications remotely on the victim's machine. This stage is called <b>"owning"</b> the system: gather information, gain unauthorized access, crack passwords, capture screenshots, install a backdoor. Typical tools: keyloggers, spyware, backdoors, crackers.<i class="ar">المهاجم ينفذ برامج خبيثة عن بعد على جهاز الضحية. تسمى هذي المرحلة <b>"owning"</b> للنظام: جمع معلومات، وصول غير مصرّح، كسر كلمات المرور، التقاط لقطات الشاشة، تثبيت backdoor. الأدوات المعتادة: keyloggers وspyware وbackdoors وcrackers.</i></p>
+        <div class="grid">
+          <div class="card"><span class="k">REMOTEEXEC</span><h3>RemoteExec<i class="ar">RemoteExec</i></h3><p>Remotely installs applications, executes programs/scripts, and updates files and folders on Windows systems across the network. It lets an attacker modify the registry, change local admin passwords, disable local accounts, and copy/update/delete files.<i class="ar">يثبّت التطبيقات وينفذ البرامج والسكربتات ويحدّث الملفات عن بعد على أنظمة ويندوز عبر الشبكة. يتيح للمهاجم تعديل الـ registry وتغيير كلمات مرور المدير المحلي وتعطيل الحسابات المحلية ونسخ/تحديث/حذف الملفات.</i></p></div>
+          <div class="card"><span class="k">KEYLOGGERS</span><h3>Keyloggers<i class="ar">Keyloggers</i></h3>
+            <p>Programs or hardware devices that monitor each keystroke and log it to a file or send it to a remote location.<i class="ar">برامج أو أجهزة تراقب كل ضغطة مفتاح وتسجلها في ملف أو ترسلها لموقع بعيد.</i></p>
+            <ul><li>Legitimate uses: monitoring employees in offices, or parents watching children.<i class="ar">استخدامات مشروعة: مراقبة الموظفين، أو متابعة الأهل لأبنائهم.</i></li>
+            <li>Attackers use them to capture email IDs, passwords, banking details, chat activity.<i class="ar">المهاجم يستخدمها لالتقاط الإيميلات وكلمات المرور والبيانات البنكية والمحادثات.</i></li>
+            <li>Physical keyloggers sit between the keyboard hardware and the OS.<i class="ar">الـ keyloggers الفيزيائية توضع بين لوحة المفاتيح ونظام التشغيل.</i></li>
+            <li>Injection levels: keylogger, driver and kernel injection.<i class="ar">مستويات الحقن: keylogger وdriver وkernel.</i></li></ul></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c4-rk2">
+        <h2>9. Rootkits in Depth<i class="ar">٩. الـ Rootkits بالتفصيل</i></h2>
+        <p>Rootkits hide their presence and the attacker's malicious activities, granting full access to the host now and in the future. They replace OS calls and utilities with modified versions. A typical rootkit includes backdoor programs, DDoS programs, packet sniffers, log-wiping utilities and IRC bots.<i class="ar">الـ Rootkits تخفي وجودها ونشاط المهاجم، وتعطيه وصولاً كاملاً للجهاز حالياً ومستقبلاً. تستبدل استدعاءات النظام والأدوات بنسخ معدلة. وعادة يضم الـ rootkit برامج backdoor وDDoS وpacket sniffers وأدوات مسح السجلات وبوتات IRC.</i></p>
+        <div class="grid">
+          <div class="card"><span class="k">HOW IT GETS PLACED</span><h3>Attacker places a rootkit by<i class="ar">المهاجم يزرع الـ rootkit عن طريق</i></h3><ul>
+            <li>Scanning for vulnerable computers and servers on the web.<i class="ar">فحص الأجهزة والسيرفرات الضعيفة على الويب.</i></li>
+            <li>Wrapping it in a special package like games.<i class="ar">تغليفه في حزمة مثل الألعاب.</i></li>
+            <li>Installing it on public or corporate computers via social engineering.<i class="ar">تثبيته على أجهزة عامة أو للشركات بالهندسة الاجتماعية.</i></li>
+            <li>Launching a zero-day attack (privilege escalation, buffer overflow, Windows kernel exploitation).<i class="ar">شن هجوم zero-day (رفع صلاحيات، buffer overflow، استغلال نواة ويندوز).</i></li></ul></div>
+          <div class="card"><span class="k">OBJECTIVES</span><h3>Objectives of a rootkit<i class="ar">أهداف الـ rootkit</i></h3><ul>
+            <li>Root the host and gain remote backdoor access.<i class="ar">السيطرة الكاملة على الجهاز وباب خلفي عن بعد.</i></li>
+            <li>Mask attacker tracks and malicious processes.<i class="ar">إخفاء آثار المهاجم والعمليات الخبيثة.</i></li>
+            <li>Gather sensitive data and network traffic.<i class="ar">جمع البيانات الحساسة وحركة الشبكة.</i></li>
+            <li>Store other malicious programs and act as a resource for bot updates.<i class="ar">تخزين برامج خبيثة أخرى والعمل كمصدر لتحديث البوتات.</i></li></ul></div>
+        </div>
+        <h3>Types of rootkits<i class="ar">أنواع الـ Rootkits</i></h3>
+        <div class="tw"><table><thead><tr><th>Level<i class="ar">المستوى</i></th><th>What it does<i class="ar">وش يسوي</i></th></tr></thead><tbody>
+          <tr><td>Hypervisor level</td><td>Acts as a hypervisor and modifies the boot sequence to load the host OS as a virtual machine.<i class="ar">يتصرف كـ hypervisor ويعدّل تسلسل الإقلاع ليحمّل نظام التشغيل كجهاز افتراضي.</i></td></tr>
+          <tr><td>Hardware / firmware</td><td>Hides in hardware devices or platform firmware that is not inspected for code integrity.<i class="ar">يختبئ في العتاد أو الـ firmware الذي لا يُفحص سلامة كوده.</i></td></tr>
+          <tr><td>Kernel level</td><td>Adds malicious code or replaces the original OS kernel and device driver code.<i class="ar">يضيف كوداً خبيثاً أو يستبدل نواة النظام وأكواد تعريفات الأجهزة.</i></td></tr>
+          <tr><td>Boot loader level</td><td>Replaces the original boot loader with one controlled by a remote attacker.<i class="ar">يستبدل الـ boot loader الأصلي بآخر يتحكم به المهاجم عن بعد.</i></td></tr>
+          <tr><td>Application level</td><td>Replaces regular application binaries with fake Trojans, or modifies existing apps by injecting malicious code.<i class="ar">يستبدل ملفات التطبيقات بـ Trojans مزيفة أو يعدّل التطبيقات بحقن كود خبيث.</i></td></tr>
+          <tr><td>Library level</td><td>Replaces original system calls with fake ones to hide information about the attacker.<i class="ar">يستبدل استدعاءات النظام الأصلية بمزيفة لإخفاء معلومات المهاجم.</i></td></tr></tbody></table></div>
+        <h3>How a rootkit works<i class="ar">كيف يعمل الـ rootkit</i></h3>
+        <div class="grid">
+          <div class="card"><span class="k">HOOKING</span><h3>Hooking<i class="ar">الـ Hooking</i></h3>
+            <p>Techniques that alter or augment the behavior of the OS or applications by intercepting function calls, messages or events. Code that handles them is a <b>hook</b>. Legitimate uses include debugging and extending functionality, but rootkits use it to fake API output that would reveal them.<i class="ar">تقنيات تغيّر أو تضيف لسلوك النظام أو التطبيقات باعتراض استدعاءات الدوال أو الرسائل أو الأحداث. الكود الذي يعالجها يسمى <b>hook</b>. له استخدامات مشروعة كالـ debugging، لكن الـ rootkits تستخدمه لتزوير مخرجات الـ API التي قد تكشفها.</i></p>
+            <p>Example: the rootkit replaces the first 5 bytes of <code>FindNextFile</code> with a <code>jmp</code> to its own function.<i class="ar">مثال: الـ rootkit يستبدل أول 5 بايتات من FindNextFile بأمر jmp إلى دالته.</i></p></div>
+          <div class="card"><span class="k">DKOM</span><h3>Direct Kernel Object Manipulation<i class="ar">التلاعب المباشر بكائنات النواة</i></h3>
+            <p>A common Windows rootkit technique to hide processes, drivers, files and connections from Task Manager. It modifies the linked list of active processes (<code>EPROCESS</code>, <code>FLINK</code>/<code>BLINK</code> pointers) so the list wraps around the rootkit's process, unlinking it. This works because kernel modules and drivers have direct access to kernel memory.<i class="ar">تقنية شائعة في ويندوز لإخفاء العمليات والتعريفات والملفات والاتصالات عن Task Manager. تعدّل القائمة المرتبطة للعمليات النشطة (مؤشرات FLINK وBLINK في EPROCESS) بحيث تتجاوز عملية الـ rootkit فتنفصل عنها. ممكن لأن وحدات النواة والتعريفات لها وصول مباشر لذاكرة النواة.</i></p></div>
+        </div>
+        <h3>Detecting rootkits<i class="ar">كشف الـ Rootkits</i></h3>
+        <div class="tw"><table><thead><tr><th>Technique<i class="ar">التقنية</i></th><th>Idea<i class="ar">الفكرة</i></th></tr></thead><tbody>
+          <tr><td>Integrity-based</td><td>Compares a snapshot of the file system, boot records or memory with a known trusted baseline.<i class="ar">يقارن لقطة من نظام الملفات أو سجلات الإقلاع أو الذاكرة بخط أساس موثوق.</i></td></tr>
+          <tr><td>Signature-based</td><td>Compares characteristics of all system processes and executables with a database of known rootkit fingerprints.<i class="ar">يقارن خصائص كل العمليات والملفات التنفيذية بقاعدة بيانات بصمات rootkits معروفة.</i></td></tr>
+          <tr><td>Heuristic / behavior-based</td><td>Any deviation from the system's normal activity may indicate a rootkit.<i class="ar">أي انحراف عن النشاط الطبيعي للنظام قد يدل على rootkit.</i></td></tr>
+          <tr><td>Runtime execution path profiling</td><td>Compares runtime execution paths of processes and executables before and after the infection.<i class="ar">يقارن مسارات التنفيذ للعمليات والملفات قبل العدوى وبعدها.</i></td></tr>
+          <tr><td>Cross-view based</td><td>Enumerates system files, processes and registry keys, and compares them to a data set generated by an algorithm that does not rely on common APIs. Any discrepancy indicates a rootkit.<i class="ar">يعدّد ملفات النظام والعمليات ومفاتيح registry ويقارنها ببيانات مولّدة بخوارزمية لا تعتمد على الـ APIs المعتادة. أي اختلاف يدل على وجود rootkit.</i></td></tr></tbody></table></div>
+        <h3>How to defend against rootkits<i class="ar">كيف تدافع ضد الـ Rootkits</i></h3>
+        <div class="grid">
+          <div class="card"><ul>
+            <li>Reinstall OS/apps from a trusted source after backing up critical data.<i class="ar">أعد تثبيت النظام والتطبيقات من مصدر موثوق بعد نسخ احتياطي للبيانات المهمة.</i></li>
+            <li>Keep well-documented automated installation procedures.<i class="ar">احتفظ بإجراءات تثبيت آلية موثقة جيداً.</i></li>
+            <li>Perform kernel memory dump analysis.<i class="ar">حلّل dump لذاكرة النواة.</i></li>
+            <li>Harden the workstation or server.<i class="ar">قوِّ حماية الجهاز أو السيرفر.</i></li>
+            <li>Educate staff not to download files from untrusted sources.<i class="ar">وعِّ الموظفين بعدم تحميل ملفات من مصادر غير موثوقة.</i></li>
+            <li>Install network and host-based firewalls.<i class="ar">ثبّت جدران حماية للشبكة وللجهاز.</i></li>
+            <li>Ensure trusted restoration media is available.<i class="ar">وفّر وسائط استعادة موثوقة.</i></li>
+            <li>Update and patch OS and applications.<i class="ar">حدّث النظام والتطبيقات.</i></li></ul></div>
+          <div class="card"><ul>
+            <li>Verify system file integrity regularly with cryptographically strong digital fingerprints.<i class="ar">تحقق دورياً من سلامة ملفات النظام ببصمات رقمية قوية تشفيرياً.</i></li>
+            <li>Update antivirus and anti-spyware regularly.<i class="ar">حدّث مضاد الفيروسات ومضاد التجسس باستمرار.</i></li>
+            <li>Avoid logging in with administrative privileges.<i class="ar">تجنب تسجيل الدخول بحساب إداري.</i></li>
+            <li>Adhere to the least privilege principle.<i class="ar">التزم بمبدأ أقل صلاحية.</i></li>
+            <li>Ensure the antivirus has rootkit protection.<i class="ar">تأكد أن مضاد الفيروسات يحمي من الـ rootkits.</i></li>
+            <li>Do not install unnecessary applications; disable unused features and services.<i class="ar">لا تثبّت تطبيقات غير ضرورية وعطّل الميزات والخدمات غير المستخدمة.</i></li></ul></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c4-quiz"><h2>Test yourself: Chapter 4<i class="ar">اختبر نفسك: الشابتر ٤</i></h2><div id="quiz-c4"></div></section>
+    </div>
+  </div>
+</div>
+
 <!-- ============ EXAM ============ -->
 <div id="v-exam" hidden>
   <div class="hero">
     <div class="tag">FINAL REVIEW</div>
     <h1>Final Exam<i class="ar">الاختبار الشامل</i></h1>
-    <p>15 random questions from both sources. Questions and answer order change every time.<i class="ar">١٥ سؤالاً عشوائياً من المصدرين. الأسئلة وترتيب الخيارات يتغيران في كل مرة.</i></p>
+    <p>20 random questions from all chapters. Questions and answer order change every time.<i class="ar">٢٠ سؤالاً عشوائياً من كل الشابترات. الأسئلة وترتيب الخيارات يتغيران في كل مرة.</i></p>
   </div>
   <div class="cols" style="grid-template-columns:minmax(0,1fr)"><div id="quiz-exam"></div></div>
 </div>
 </main>
-<div class="wrap foot">Based on Chapter 2 slides and the Penetration Testing Dossier · مبني على شرائح الشابتر ٢ ودوسية Penetration Testing</div>
+<div class="wrap foot">Based on the Penetration Testing Dossier and the Chapter 2, 3 and 4 slides · مبني على دوسية Penetration Testing وشرائح الشابتر ٢ و٣ و٤</div>
 </div>
 
 <script>
@@ -549,7 +966,237 @@ c2: [
  {q:["Which vulnerability analysis methods does the chapter list?","ما طرق تحليل الثغرات التي يذكرها الشابتر؟"],
   a:[["Automated scanning, targeted analysis, manual research","الفحص الآلي، والتحليل الموجّه، والبحث اليدوي"],["SYN, UDP, version","SYN وUDP والنسخة"],["Whois, nslookup, host","Whois وnslookup وhost"],["Reporting only","التقرير فقط"]],
   e:["Manual vulnerability research is the better way to improve your practice.","البحث اليدوي عن الثغرات هو الطريقة الأفضل لتطوير ممارستك."]}
-]};
+],
+c3: [
+ {q:["What is passive scanning?","ما هو الفحص السلبي (Passive scanning)؟"],
+  a:[["Detecting vulnerabilities from network data gathered without direct interaction with the target","اكتشاف الثغرات من بيانات شبكة تم جمعها بدون تفاعل مباشر مع الهدف"],["Sending packets to every port of the target","إرسال حزم لكل منفذ في الهدف"],["Exploiting a flaw to gain access","استغلال ثغرة للدخول"],["Running a brute-force attack","تنفيذ هجوم brute-force"]],
+  e:["No direct connection to the target is made.","ما يتم أي اتصال مباشر بالهدف."]},
+ {q:["Why can an IDS not detect a passive scan?","ليش ما يقدر الـ IDS يكتشف الفحص السلبي؟"],
+  a:[["Because the attacker never actually connects to the target system","لأن المهاجم ما يتصل فعلياً بالنظام الهدف"],["Because passive scans are encrypted","لأن الفحوصات السلبية مشفرة"],["Because the IDS ignores all scans","لأن الـ IDS يتجاهل كل الفحوصات"],["Because passive scans use UDP only","لأن الفحوصات السلبية تستخدم UDP فقط"]],
+  e:["Active scans are more reliable but may be detected.","الفحوصات الفعّالة أوثق لكن ممكن تُكتشف."]},
+ {q:["Which of these is NOT a passive reconnaissance site?","أي من التالي ليس موقع استطلاع سلبي؟"],
+  a:[["Nmap","Nmap"],["Netcraft","Netcraft"],["Shodan","Shodan"],["BuiltWith","BuiltWith"]],
+  e:["Nmap actively sends packets to the target; the others are passive. archive.org is also on the list.","Nmap يرسل حزماً للهدف فعلياً، والبقية سلبية. وarchive.org أيضاً ضمن القائمة."]},
+ {q:["Which Shodan filter finds devices in a specific city?","أي فلتر في Shodan يجد أجهزة في مدينة محددة؟"],
+  a:[["city:","city:"],["geo:","geo:"],["net:","net:"],["os:","os:"]],
+  e:["geo: searches by coordinates, net: by IP or CIDR, os: by operating system.","geo: للإحداثيات، وnet: للـ IP أو CIDR، وos: لنظام التشغيل."]},
+ {q:["Which Shodan filter searches by an IP or /x CIDR range?","أي فلتر في Shodan يبحث بعنوان IP أو نطاق CIDR؟"],
+  a:[["net:","net:"],["hostname:","hostname:"],["port:","port:"],["country:","country:"]],
+  e:["hostname: matches a specific hostname instead.","أما hostname: فيطابق اسم مضيف محدد."]},
+ {q:["What is Shodan essentially?","ما هو Shodan في الأساس؟"],
+  a:[["A search engine for vulnerabilities","محرك بحث عن الثغرات"],["A packet sniffer","محلل حزم (packet sniffer)"],["A port scanner you install locally","ماسح منافذ تثبته محلياً"],["A password cracker","كاسر كلمات مرور"]],
+  e:["It needs a free account and is invaluable to a pentester.","يحتاج حساباً مجانياً وهو مفيد جداً للمختبر."]},
+ {q:["Which Shodan query looks for old IIS servers?","أي استعلام في Shodan يبحث عن سيرفرات IIS قديمة؟"],
+  a:[["iis/5.0","iis/5.0"],["webcamxp city:Chicago","webcamxp city:Chicago"],["apache city:San Francisco","apache city:San Francisco"],["default password country:US","default password country:US"]],
+  e:["webcamxp finds webcams and default password finds default credentials.","webcamxp يجد كاميرات، وdefault password يجد بيانات دخول افتراضية."]},
+ {q:["A Netcraft report shows IIS on Windows 2012 not rebooted for 8 months. What does this suggest?","تقرير Netcraft يبين IIS على Windows 2012 بدون إعادة تشغيل منذ 8 أشهر. وش يوحي به؟"],
+  a:[["Patches requiring a reboot were not applied, so recent Windows 2012 vulnerabilities may be present","التحديثات التي تحتاج إعادة تشغيل لم تُطبق، فقد تكون ثغرات Windows 2012 الحديثة موجودة"],["The server is fully patched","السيرفر محدّث بالكامل"],["The server runs Linux","السيرفر يعمل بلينكس"],["The server is a honeypot","السيرفر honeypot"]],
+  e:["Couple this with a web search for Windows 2012 vulnerabilities found in the last 8 months.","اربط هذا ببحث عن ثغرات Windows 2012 المكتشفة في آخر 8 أشهر."]},
+ {q:["What does BuiltWith tell you about a website?","وش يخبرك به BuiltWith عن موقع ما؟"],
+  a:[["The technologies it is built with, such as scripting and programming languages","التقنيات التي بُني عليها، مثل لغات البرمجة والسكربتات"],["Its open ports","منافذه المفتوحة"],["Its admin password","كلمة مرور الأدمن"],["Its firewall rules","قواعد جدار الحماية"]],
+  e:["That decides your approach: ASP.NET and PHP sites need different techniques.","وهذا يحدد أسلوبك: مواقع ASP.NET وPHP تحتاج تقنيات مختلفة."]},
+ {q:["Why look at social media during passive reconnaissance?","ليش نبحث في وسائل التواصل أثناء الاستطلاع السلبي؟"],
+  a:[["To build a dossier: software versions, key names for social engineering","لبناء ملف: نسخ البرامج وأسماء أشخاص مهمين للهندسة الاجتماعية"],["To scan ports","لفحص المنافذ"],["To run exploits","لتشغيل الـ exploits"],["To crack hashes","لكسر الـ hashes"]],
+  e:["E.g., an admin complaining about a move to a new Windows version.","مثلاً مدير يشتكي من الانتقال لنسخة ويندوز جديدة."]},
+ {q:["Which Google operator restricts a search to a specific site?","أي عامل في Google يحصر البحث في موقع محدد؟"],
+  a:[["site:","site:"],["info:","info:"],["related:","related:"],["cache:","cache:"]],
+  e:["Example: policies site:xyz.com.","مثال: policies site:xyz.com."]},
+ {q:["Which search returns all PDF files from xyz.com?","أي بحث يرجّع كل ملفات PDF من xyz.com؟"],
+  a:[["filetype:pdf site:xyz.com","filetype:pdf site:xyz.com"],["info:xyz.com pdf","info:xyz.com pdf"],["related:xyz.com","related:xyz.com"],["cache:xyz.com","cache:xyz.com"]],
+  e:["Adding a keyword like policies narrows it to policy documents.","إضافة كلمة مثل policies تحصرها في وثائق السياسات."]},
+ {q:["Which Google operator finds sites related to a given one?","أي عامل في Google يجد مواقع مرتبطة بموقع معين؟"],
+  a:[["related:","related:"],["inurl:","inurl:"],["site:","site:"],["filetype:","filetype:"]],
+  e:["inurl: looks for a word inside the URL.","أما inurl: فيبحث عن كلمة داخل الرابط."]},
+ {q:["What is the key trade-off between active and passive scanning?","ما المفاضلة الأساسية بين الفحص الفعّال والسلبي؟"],
+  a:[["Active is far more reliable but may be detected","الفعّال أوثق بكثير لكنه قد يُكتشف"],["Active is undetectable","الفعّال لا يمكن اكتشافه"],["Passive is more reliable","السلبي أوثق"],["Passive may be detected by an IDS","السلبي قد يكتشفه الـ IDS"]],
+  e:["Passive scanning cannot be detected by an IDS because no connection is made.","الفحص السلبي لا يكتشفه الـ IDS لأنه لا يوجد اتصال."]},
+ {q:["Which service is associated with port 161?","أي خدمة ترتبط بالمنفذ 161؟"],
+  a:[["SNMP","SNMP"],["FTP","FTP"],["Telnet","Telnet"],["SMB","SMB"]],
+  e:["If open, an attacker might try SNMP-related attacks.","لو كان مفتوحاً قد يجرب المهاجم هجمات SNMP."]},
+ {q:["Why do many admins block ping scans?","ليش كثير من المدراء يحجبون ping scan؟"],
+  a:[["They block incoming ICMP packets","يحجبون حزم ICMP الواردة"],["Ping is encrypted","الـ ping مشفر"],["Ping uses port 80","الـ ping يستخدم المنفذ 80"],["Ping needs a password","الـ ping يحتاج كلمة مرور"]],
+  e:["A ping scan simply sends a ping to the target.","الـ ping scan يرسل ping للهدف فقط."]},
+ {q:["Which Nmap scan is the most reliable but the most likely to be detected?","أي فحص Nmap هو الأوثق لكنه الأكثر عرضة للاكتشاف؟"],
+  a:[["Connect scan (-sT)","Connect scan (-sT)"],["SYN scan (-sS)","SYN scan (-sS)"],["FIN scan (-sF)","FIN scan (-sF)"],["NULL scan","NULL scan"]],
+  e:["It makes a complete connection with the target.","يكمل اتصالاً كاملاً مع الهدف."]},
+ {q:["Why is the SYN scan called a half-open scan?","ليش يُسمّى SYN scan بالفحص نصف المفتوح (half-open)؟"],
+  a:[["It sends a SYN and never answers the SYN/ACK","يرسل SYN ولا يرد على الـ SYN/ACK"],["It sends only ACK packets","يرسل حزم ACK فقط"],["It opens half the ports","يفتح نصف المنافذ"],["It scans UDP","يفحص UDP"]],
+  e:["Only one packet is sent per port.","تُرسل حزمة واحدة فقط لكل منفذ."]},
+ {q:["What describes a XMAS scan?","وش الذي يصف XMAS scan؟"],
+  a:[["Several flags turned on, like a Christmas tree","عدة أعلام مفعّلة مثل شجرة الكريسمس"],["No flags turned on","بدون أي أعلام مفعّلة"],["Only ACK set","ACK فقط مفعّل"],["A complete TCP handshake","handshake كامل لـ TCP"]],
+  e:["The NULL scan is the opposite: no flags at all.","أما NULL scan فهو العكس: بدون أي علم."]},
+ {q:["What does a NULL scan send?","ماذا يرسل NULL scan؟"],
+  a:[["Packets with no flags turned on","حزماً بدون أي علم مفعّل"],["Packets with all flags on","حزماً بكل الأعلام مفعّلة"],["Only SYN packets","حزم SYN فقط"],["ICMP echo requests","طلبات ICMP echo"]],
+  e:["It is the opposite of the XMAS scan.","هو عكس XMAS scan."]},
+ {q:["How does a closed port respond to FIN and XMAS scans, and an open one?","كيف يرد المنفذ المغلق على فحصي FIN وXMAS، وكيف يرد المفتوح؟"],
+  a:[["Closed: RST packet. Open: no response","المغلق: حزمة RST. المفتوح: لا رد"],["Closed: no response. Open: RST","المغلق: لا رد. المفتوح: RST"],["Closed: SYN/ACK. Open: RST","المغلق: SYN/ACK. المفتوح: RST"],["Both answer SYN/ACK","كلاهما يرد SYN/ACK"]],
+  e:["RST means reset.","RST تعني reset."]},
+ {q:["How does an open port respond to a SYN scan?","كيف يرد المنفذ المفتوح على SYN scan؟"],
+  a:[["SYN/ACK","SYN/ACK"],["RST","RST"],["No response","لا رد"],["FIN","FIN"]],
+  e:["A closed port answers with RST.","أما المغلق فيرد بـ RST."]},
+ {q:["On which systems do ACK and NULL scans work?","على أي أنظمة تعمل فحوصات ACK وNULL؟"],
+  a:[["UNIX systems only","أنظمة UNIX فقط"],["Windows only","ويندوز فقط"],["All systems","كل الأنظمة"],["Cisco devices only","أجهزة Cisco فقط"]],
+  e:["Noted in the Nmap response slide.","مذكور في شريحة ردود Nmap."]},
+ {q:["Which Nmap flag detects the operating system?","أي خيار في Nmap يكتشف نظام التشغيل؟"],
+  a:[["-O","-O"],["-sP","-sP"],["-sT","-sT"],["-sS","-sS"]],
+  e:["-sP is ping, -sT is TCP connect, -sS is SYN.","-sP هو ping، و-sT هو TCP connect، و-sS هو SYN."]},
+ {q:["Port 23 is open. What do you do?","المنفذ 23 مفتوح. وش تسوي؟"],
+  a:[["Try to log on to Telnet, and sniff the traffic to that port","تجرب الدخول عبر Telnet، وتراقب الحركة على المنفذ بـ sniffer"],["Ignore it, since Telnet is secure","تتجاهله لأن Telnet آمن"],["Assume encrypted email","تفترض بريداً مشفراً"],["Assume a Windows domain","تفترض Windows domain"]],
+  e:["Telnet is an insecure command-line connection.","Telnet اتصال سطر أوامر غير آمن."]},
+ {q:["What does an open port 69 (TFTP) hint at?","وش يلمّح له المنفذ 69 (TFTP) المفتوح؟"],
+  a:[["Cisco devices retrieving digital certificates","أجهزة Cisco تجلب شهادات رقمية"],["A Windows domain","Windows domain"],["Encrypted email","بريد مشفر"],["A web server","سيرفر ويب"]],
+  e:["TFTP is limited FTP over UDP.","TFTP هو FTP محدود على UDP."]},
+ {q:["What do ports 465, 993 and 995 tell you?","وش تخبرك به المنافذ 465 و993 و995؟"],
+  a:[["The target uses encrypted email, so basic precautions exist","الهدف يستخدم بريداً مشفراً، فيوجد احتياطات أساسية"],["Remote Desktop is enabled","Remote Desktop مفعّل"],["It is an SMB server","هو سيرفر SMB"],["Anonymous FTP is allowed","FTP المجهول مسموح"]],
+  e:["You cannot read the emails.","ما تقدر تقرأ الإيميلات."]},
+ {q:["What does an open port 445 (SMB) tell you?","وش يخبرك المنفذ 445 (SMB) المفتوح؟"],
+  a:[["It is a Windows domain (Active Directory)","هي شبكة Windows domain (Active Directory)"],["A Cisco device is present","يوجد جهاز Cisco"],["Email is encrypted","البريد مشفر"],["Telnet is enabled","Telnet مفعّل"]],
+  e:["SMB is used by Windows operating systems running Active Directory.","يستخدمه ويندوز مع Active Directory."]},
+ {q:["Port 3389 is open. What is the pentester's move?","المنفذ 3389 مفتوح. وش يسوي المختبر؟"],
+  a:[["At least attempt to remote desktop into the system","يحاول على الأقل الدخول عبر Remote Desktop"],["Ignore it","يتجاهله"],["Assume the host is secure","يفترض أن الجهاز آمن"],["Shut it down","يطفئه"]],
+  e:["Remote Desktop is notoriously insecure.","Remote Desktop معروف بضعف أمانه."]},
+ {q:["What is Wireshark?","ما هو Wireshark؟"],
+  a:[["A widely known network packet sniffer with a GUI","محلل حزم شبكة مشهور بواجهة رسومية"],["A vulnerability database","قاعدة بيانات ثغرات"],["A web scanner","ماسح ويب"],["A zone transfer tool","أداة zone transfer"]],
+  e:["It is a free download and very versatile.","مجاني للتحميل ومتعدد الاستخدامات."]}
+],
+c4: [
+ {q:["What is malware?","ما هو الـ malware؟"],
+  a:[["A set of instructions that run on your computer and make it do what the attacker wants","مجموعة تعليمات تشتغل على جهازك وتخليه يسوي ما يريده المهاجم"],["A legitimate system update","تحديث نظام شرعي"],["A type of firewall","نوع من جدران الحماية"],["A hardware component","مكوّن عتادي"]],
+  e:["Uses include stealing information, deleting files, click fraud, and using your machine as a relay.","من استخداماته سرقة المعلومات وحذف الملفات وclick fraud واستخدام جهازك كـ relay."]},
+ {q:["Which is NOT a listed use of malware?","أي من التالي ليس من استخدامات الـ malware المذكورة؟"],
+  a:[["Speeding up the computer","تسريع الكمبيوتر"],["Click fraud","click fraud"],["Stealing software serial numbers","سرقة أرقام تسلسلية للبرامج"],["Using the computer as a relay","استخدام الجهاز كـ relay"]],
+  e:["The listed uses are stealing personal information, deleting files, click fraud, serial numbers and relays.","المذكور: سرقة معلومات شخصية وحذف ملفات وclick fraud وأرقام تسلسلية وrelay."]},
+ {q:["How is a virus defined (Fred Cohen, 1983)?","كيف عُرِّف الفيروس (Fred Cohen، 1983)؟"],
+  a:[["A program that infects other programs by modifying them to include a possibly evolved copy of itself","برنامج يصيب برامج أخرى بتعديلها لتحمل نسخة منه قد تكون متطورة"],["A program that spreads over the network without user action","برنامج ينتشر عبر الشبكة بدون تدخل المستخدم"],["A program that hides in the kernel","برنامج يختبئ في النواة"],["A program that shows ads","برنامج يعرض إعلانات"]],
+  e:["The network-spreading one is a worm.","البرنامج الذي ينتشر عبر الشبكة هو الدودة."]},
+ {q:["What is the difference between polymorphic and metamorphic viruses?","ما الفرق بين الفيروس Polymorphic وMetamorphic؟"],
+  a:[["Polymorphic mutates via an engine keeping the algorithm intact; metamorphic changes after each infection","Polymorphic يتحول عبر محرك مع بقاء الخوارزمية، وMetamorphic يتغير بعد كل عدوى"],["They are identical","متطابقان"],["Polymorphic spreads by email only","Polymorphic ينتشر بالبريد فقط"],["Metamorphic never changes","Metamorphic لا يتغير أبداً"]],
+  e:["Polymorphic malware typically uses a packer.","الـ polymorphic يستخدم عادة packer."]},
+ {q:["What defines a trojan?","وش يعرّف الـ trojan؟"],
+  a:[["Appears to do something desirable but secretly performs malicious functions allowing unauthorized access","يبدو أنه يؤدي وظيفة مفيدة لكنه سراً ينفذ وظائف خبيثة تتيح وصولاً غير مصرّح"],["Replicates itself over a network","ينسخ نفسه عبر الشبكة"],["Infects the MBR only","يصيب الـ MBR فقط"],["Encrypts files for ransom","يشفر الملفات لطلب فدية"]],
+  e:["Source: Wikipedia definition.","المصدر: تعريف Wikipedia."]},
+ {q:["What defines a rootkit (Symantec)?","وش يعرّف الـ rootkit (حسب Symantec)؟"],
+  a:[["A component using stealth to keep a persistent and undetectable presence","مكوّن يستخدم الإخفاء ليحافظ على وجود دائم وغير مكتشف"],["A self-replicating network program","برنامج شبكي ينسخ نفسه"],["A program that shows ads","برنامج يعرض إعلانات"],["A scareware tool","أداة scareware"]],
+  e:["Stealth and persistence are the keywords.","الإخفاء والبقاء هما الكلمتان المفتاحيتان."]},
+ {q:["What makes a worm different from a virus?","وش الفرق بين الدودة والفيروس؟"],
+  a:[["It spreads over a network without any user intervention","تنتشر عبر الشبكة بدون أي تدخل من المستخدم"],["It needs a host file","تحتاج ملفاً مضيفاً"],["It only affects Linux","تؤثر على لينكس فقط"],["It never replicates","لا تنسخ نفسها أبداً"]],
+  e:["A worm is a self-replicating program.","الدودة برنامج ينسخ نفسه ذاتياً."]},
+ {q:["Which technique attaches malware at the beginning of the host file?","أي أسلوب يلصق الكود الخبيث في بداية الملف المضيف؟"],
+  a:[["Prepending","Prepending"],["Appending","Appending"],["Cavity","Cavity"],["Overwriting","Overwriting"]],
+  e:["Appending attaches at the end; cavity uses open space.","Appending في النهاية، وCavity يستخدم المساحات الفارغة."]},
+ {q:["Which technique places virus code in empty space inside the host without damaging the program?","أي أسلوب يضع كود الفيروس في مساحة فارغة داخل الملف بدون إتلاف البرنامج؟"],
+  a:[["Cavity","Cavity"],["Overwriting","Overwriting"],["Prepending","Prepending"],["Packing","Packing"]],
+  e:["Multi-cavity spreads pieces of the code over several open spaces.","Multi-cavity يوزع أجزاء الكود على عدة مساحات فارغة."]},
+ {q:["What is a packer?","ما هو الـ packer؟"],
+  a:[["A tool that masks a malicious file by encrypting, compressing, or changing its format","أداة تخفي الملف الخبيث بالتشفير أو الضغط أو تغيير الصيغة"],["A network scanner","ماسح شبكة"],["A rootkit detector","كاشف rootkit"],["A backup tool","أداة نسخ احتياطي"]],
+  e:["Packers also add junk code and anti-debug/anti-VM tricks.","كذلك تضيف كوداً زائداً وحيل مضادة للـ debugging والـ VM."]},
+ {q:["Which is NOT a packer functionality?","أي مما يلي ليس من وظائف الـ packer؟"],
+  a:[["Port scanning","فحص المنافذ"],["Compress","ضغط"],["Anti-VM","مضاد للـ VM"],["Add junk","إضافة كود زائد"]],
+  e:["Packers compress, encrypt, randomize, add anti-debug, junk, anti-VM, and virtualization.","الـ packers تضغط وتشفّر وتضيف عشوائية وتضيف anti-debug وjunk وanti-VM وvirtualization."]},
+ {q:["Which Registry key is used for Windows auto start?","أي مفتاح Registry يُستخدم للتشغيل التلقائي في ويندوز؟"],
+  a:[["HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run","HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"],["HKLM\\HARDWARE","HKLM\\HARDWARE"],["HKCU\\Control Panel\\Desktop","HKCU\\Control Panel\\Desktop"],["/etc/crontab","/etc/crontab"]],
+  e:["/etc/crontab is a Unix autostart mechanism.","/etc/crontab آلية تشغيل تلقائي في يونكس."]},
+ {q:["Which is a Unix autostart mechanism?","أيها آلية تشغيل تلقائي في يونكس؟"],
+  a:[["crontab","crontab"],["Win.ini","Win.ini"],["Config.sys","Config.sys"],["Task Scheduler","Task Scheduler"]],
+  e:["Others: init.d, /etc/rc.local, .login, .xsession.","وأخرى: init.d و/etc/rc.local و.login و.xsession."]},
+ {q:["Which are macro virus callbacks in Word?","ما هي دوال الـ callback لفيروس الماكرو في Word؟"],
+  a:[["AutoExec, AutoClose, AutoOpen, AutoNew","AutoExec وAutoClose وAutoOpen وAutoNew"],["Run, RunOnce, Load, Shell","Run وRunOnce وLoad وShell"],["init, fork, exec, wait","init وfork وexec وwait"],["Start, Stop, Pause, Resume","Start وStop وPause وResume"]],
+  e:["Macro viruses use the built-in script engine.","فيروسات الماكرو تستخدم محرك السكربتات المدمج."]},
+ {q:["Which programs does a userland rootkit replace to perform its functions?","أي برامج يستبدلها الـ rootkit على مستوى المستخدم لأداء وظائفه؟"],
+  a:[["login, sshd, passwd","login وsshd وpasswd"],["ps, netstat, ls","ps وnetstat وls"],["kernel32.dll","kernel32.dll"],["The boot loader","الـ boot loader"]],
+  e:["It hides activity by replacing ps, netstat, ls, find and du.","ويخفي النشاط باستبدال ps وnetstat وls وfind وdu."]},
+ {q:["Which is a technique for subverting the kernel?","أي مما يلي تقنية لاختراق النواة؟"],
+  a:[["Loadable Kernel Module","Loadable Kernel Module"],["Macro callbacks","Macro callbacks"],["Wrapping in a game","التغليف في لعبة"],["ICMP tunneling","ICMP tunneling"]],
+  e:["The others: kernel patch and kernel memory patching (/dev/kmem).","والبقية: kernel patch وkernel memory patching (/dev/kmem)."]},
+ {q:["Why can a bootkit avoid OS protections?","ليش يقدر الـ bootkit يتجاوز حمايات النظام؟"],
+  a:[["The OS assumes the system was in a trusted state when the boot loader took control","النظام يفترض أن الجهاز كان موثوقاً لحظة استلام الـ boot loader"],["It runs after the antivirus","يعمل بعد مضاد الفيروسات"],["It is signed by Microsoft","موقّع من Microsoft"],["It lives only in RAM","يعيش في الذاكرة فقط"]],
+  e:["Vboot is about 3 KB, patches checks in flight, and communicates via ping.","Vboot حجمه حوالي 3KB، يعدّل الفحوصات أثناء التنفيذ، ويتواصل عبر ping."]},
+ {q:["Where does a hypervisor rootkit sit?","أين يجلس الـ hypervisor rootkit؟"],
+  a:[["Between the hardware and the target OS, as a virtual machine monitor","بين العتاد ونظام التشغيل الهدف كمراقب أجهزة افتراضية"],["Inside a Word document","داخل مستند Word"],["In the user's browser","في متصفح المستخدم"],["On the router","على الراوتر"]],
+  e:["The target OS runs as a guest without knowing.","نظام الهدف يعمل كضيف بدون ما يدري."]},
+ {q:["What characterizes a reverse backdoor connection?","وش يميز اتصال الباب الخلفي العكسي؟"],
+  a:[["The infected host connects out to the attacker","الجهاز المصاب هو من يتصل بالمهاجم"],["The attacker must be inside the LAN","المهاجم يجب أن يكون داخل الشبكة المحلية"],["It only uses UDP","يستخدم UDP فقط"],["It needs no network","لا يحتاج شبكة"]],
+  e:["This helps bypass firewalls that block inbound connections.","وهذا يساعد على تجاوز جدران تمنع الاتصالات الواردة."]},
+ {q:["Which protocol does a covert backdoor channel use in the slides?","أي بروتوكول تستخدمه قناة الباب الخلفي السري في الشرائح؟"],
+  a:[["ICMP","ICMP"],["HTTP","HTTP"],["SMTP","SMTP"],["FTP","FTP"]],
+  e:["Basic and reverse backdoors use TCP.","الـ basic والـ reverse يستخدمان TCP."]},
+ {q:["What are the two types of anti-virus?","ما نوعا مضاد الفيروسات؟"],
+  a:[["Scanner and real-time monitor","Scanner وreal-time monitor"],["Signature and heuristic","Signature وheuristic"],["Static and dynamic","Static وdynamic"],["Host and network","Host وnetwork"]],
+  e:["Signature and heuristics are detection methods, not types.","الـ signature والـ heuristic أساليب كشف وليست أنواعاً."]},
+ {q:["What does Cohen's impossibility result state?","ماذا تنص نتيجة الاستحالة عند Cohen؟"],
+  a:[["It is not possible to build a perfect virus detector","لا يمكن بناء كاشف فيروسات مثالي"],["All viruses can be detected by signatures","كل الفيروسات يمكن كشفها بالتواقيع"],["Viruses cannot call detectors","الفيروسات لا تستطيع استدعاء الكواشف"],["Checksums are perfect","الـ checksums مثالية"]],
+  e:["Diagonal argument: V calls P; if P(V) is true V halts, if false V spreads.","البرهان القطري: V يستدعي P؛ لو P(V) صح يتوقف V، ولو خطأ ينتشر."]},
+ {q:["What is virus-signature detection?","ما هو الكشف بتوقيع الفيروس؟"],
+  a:[["Finding a string that identifies the virus, like a fingerprint","إيجاد سلسلة تعرّف الفيروس مثل البصمة"],["Observing network behavior only","مراقبة سلوك الشبكة فقط"],["Running the file in a VM","تشغيل الملف في VM"],["Comparing checksums","مقارنة checksums"]],
+  e:["Heuristics instead analyze behavior.","أما الـ heuristics فتحلل السلوك."]},
+ {q:["Which behavior would a heuristic detector flag?","أي سلوك سيرصده الكاشف الـ heuristic؟"],
+  a:[["An attempt to modify the boot sector","محاولة تعديل الـ boot sector"],["A known string in the file","سلسلة معروفة في الملف"],["A matching checksum","checksum مطابق"],["A signed driver","تعريف موقّع"]],
+  e:["Also network access, file open, and attempts to delete files.","وكذلك الوصول للشبكة وفتح الملفات ومحاولات الحذف."]},
+ {q:["How does checksum-based detection work?","كيف يعمل الكشف بالـ checksum؟"],
+  a:[["Compute checksums of good binaries and config files, then detect changes","احسب checksums للملفات السليمة وملفات الإعداد ثم اكتشف التغيير"],["Match virus strings","طابق سلاسل الفيروس"],["Run files in a VM","شغّل الملفات في VM"],["Block all ICMP","احجب كل ICMP"]],
+  e:["Limitation noted: eventually there will be more malware than goodware.","من القيود: في وقت ما بيكون الـ malware أكثر من الـ goodware."]},
+ {q:["What is sandbox analysis?","ما هو التحليل في الـ sandbox؟"],
+  a:[["Running the executable in a VM and observing file, network and memory activity","تشغيل الملف في VM ومراقبة نشاط الملفات والشبكة والذاكرة"],["Reading its source code","قراءة الكود المصدري"],["Deleting it","حذفه"],["Comparing it with a signature","مقارنته بتوقيع"]],
+  e:["Safe observation of the sample's behavior.","مراقبة آمنة لسلوك العينة."]},
+ {q:["How do you deal with a packed executable?","كيف تتعامل مع ملف تنفيذي مضغوط بـ packer؟"],
+  a:[["Launch it, wait until it unpacks, then dump the memory","شغّله، انتظر حتى يفك نفسه، ثم اسحب الذاكرة"],["Delete it immediately","احذفه فوراً"],["Run a ping scan","شغّل ping scan"],["Rename the file","غيّر اسم الملف"]],
+  e:["The unpacked code is visible in memory.","الكود بعد فك الضغط يظهر في الذاكرة."]},
+ {q:["Which worm type chooses random addresses to attack?","أي نوع دودة يختار عناوين عشوائية للهجوم؟"],
+  a:[["Scanning worm","Scanning worm"],["Flash worm","Flash worm"],["Contagion worm","Contagion worm"],["Topological worm","Topological worm"]],
+  e:["Coordinated scanning has different instances scan different addresses.","في coordinated scanning تفحص النسخ المختلفة عناوين مختلفة."]},
+ {q:["Which worm assembles a tree of vulnerable hosts in advance?","أي دودة تجمّع مسبقاً شجرة بالأجهزة الضعيفة؟"],
+  a:[["Flash worm","Flash worm"],["Meta-server worm","Meta-server worm"],["Contagion worm","Contagion worm"],["Scanning worm","Scanning worm"]],
+  e:["Not observed in the wild yet, but could potentially infect 10^6 hosts in under 2 seconds.","لم تُرصد فعلياً بعد، لكن قد تصيب مليون جهاز في أقل من ثانيتين."]},
+ {q:["A worm asks Google for hosts matching 'powered by phpbb'. Which type is it?","دودة تسأل Google عن أجهزة تطابق 'powered by phpbb'. أي نوع هي؟"],
+  a:[["Meta-server worm","Meta-server worm"],["Topological worm","Topological worm"],["Flash worm","Flash worm"],["Contagion worm","Contagion worm"]],
+  e:["It asks a server for hosts to infect.","تسأل سيرفراً عن أجهزة لإصابتها."]},
+ {q:["Which worm uses web server logs, address books, config files, and SSH known hosts?","أي دودة تستخدم سجلات سيرفر الويب ودفاتر العناوين وملفات الإعداد وSSH known hosts؟"],
+  a:[["Topological worm","Topological worm"],["Flash worm","Flash worm"],["Scanning worm","Scanning worm"],["Meta-server worm","Meta-server worm"]],
+  e:["It uses information from already-infected hosts.","تستخدم معلومات من أجهزة مصابة أصلاً."]},
+ {q:["What is a honeyfarm used for in worm detection?","فيمَ يُستخدم الـ honeyfarm في كشف الديدان؟"],
+  a:[["A collection of honeypots fed by a network telescope; any outbound connection means a worm","مجموعة honeypots تغذيها network telescope؛ أي اتصال صادر يعني دودة"],["Storing backups","تخزين النسخ الاحتياطية"],["Encrypting traffic","تشفير الحركة"],["Blocking ads","حجب الإعلانات"]],
+  e:["Signatures are distilled from inbound/outbound traffic.","تُستخرج التواقيع من الحركة الواردة والصادرة."]},
+ {q:["What do scan suppressors do?","ماذا تفعل الـ scan suppressors؟"],
+  a:[["Block traffic from hosts that make failed connection attempts to too many other hosts","تحجب حركة الأجهزة التي تفشل في الاتصال بعدد كبير من الأجهزة الأخرى"],["Encrypt scans","تشفّر الفحوصات"],["Delete worms","تحذف الديدان"],["Create signatures","تنشئ تواقيع"]],
+  e:["They thwart scanning worms.","تحبط الديدان الماسحة."]},
+ {q:["Which two properties does content sifting look for?","ما الخاصيتان اللتان يبحث عنهما content sifting؟"],
+  a:[["High content prevalence and high address dispersion","انتشار محتوى عالٍ وتشتت عناوين عالٍ"],["Low prevalence and low dispersion","انتشار منخفض وتشتت منخفض"],["High entropy and low size","إنتروبي عالية وحجم صغير"],["Encrypted payloads","حمولات مشفرة"]],
+  e:["The invariant bitstring W is common and addresses many sources and destinations.","السلسلة الثابتة W شائعة وتخاطب مصادر ووجهات كثيرة."]},
+ {q:["What is vertical privilege escalation?","ما هو الرفع العمودي للصلاحيات؟"],
+  a:[["Gaining higher privileges than the existing ones","الحصول على صلاحيات أعلى من الموجودة"],["Using another user's identity at the same level","انتحال مستخدم آخر بنفس المستوى"],["Installing a keylogger","تثبيت keylogger"],["Patching the system","تحديث النظام"]],
+  e:["Horizontal means same level, but as another user.","الأفقي هو نفس المستوى لكن بهوية مستخدم آخر."]},
+ {q:["Why does DLL hijacking work?","ليش ينجح DLL hijacking؟"],
+  a:[["Applications often don't use the fully qualified path and search their own directory first","التطبيقات غالباً لا تستخدم المسار الكامل وتبحث في مجلدها أولاً"],["DLLs are not executable","ملفات DLL غير تنفيذية"],["Windows has no DLLs","ويندوز بلا DLL"],["DLLs are always encrypted","ملفات DLL مشفرة دائماً"]],
+  e:["A malicious DLL in the application directory is loaded instead of the real one.","الـ DLL الخبيث في مجلد التطبيق يُحمَّل بدل الحقيقي."]},
+ {q:["Which is a recommended defense against privilege escalation?","أي مما يلي دفاع موصى به ضد رفع الصلاحيات؟"],
+  a:[["Run users and applications on least privileges","تشغيل المستخدمين والتطبيقات بأقل صلاحيات"],["Give everyone admin rights","إعطاء الجميع صلاحيات أدمن"],["Disable patching","تعطيل التحديثات"],["Run services as administrator","تشغيل الخدمات كأدمن"]],
+  e:["Also: MFA, patch regularly, run services as unprivileged accounts.","وأيضاً: MFA وتحديث دوري وتشغيل الخدمات بحسابات بلا صلاحيات."]},
+ {q:["What does RemoteExec let an attacker do?","ماذا يتيح RemoteExec للمهاجم؟"],
+  a:[["Remotely install apps, run programs, modify the registry, change local admin passwords","تثبيت تطبيقات وتشغيل برامج عن بعد وتعديل registry وتغيير كلمات مرور المدير المحلي"],["Only read emails","قراءة الإيميلات فقط"],["Scan UDP ports","فحص منافذ UDP"],["Encrypt disks","تشفير الأقراص"]],
+  e:["It works on Windows systems across the network.","يعمل على أنظمة ويندوز عبر الشبكة."]},
+ {q:["What does a keylogger do?","ماذا يفعل الـ keylogger؟"],
+  a:[["Monitors each keystroke and logs it to a file or sends it remotely","يراقب كل ضغطة مفتاح ويسجلها في ملف أو يرسلها عن بعد"],["Scans ports","يفحص المنافذ"],["Cracks hashes","يكسر الـ hashes"],["Blocks ads","يحجب الإعلانات"]],
+  e:["Physical keyloggers sit between the keyboard hardware and the OS.","الـ keyloggers الفيزيائية توضع بين لوحة المفاتيح ونظام التشغيل."]},
+ {q:["Which rootkit type replaces the original boot loader with one controlled by a remote attacker?","أي نوع rootkit يستبدل الـ boot loader الأصلي بآخر يتحكم به المهاجم عن بعد؟"],
+  a:[["Boot loader level","Boot loader level"],["Library level","Library level"],["Application level","Application level"],["Hardware/firmware","Hardware/firmware"]],
+  e:["Library level replaces system calls with fake ones.","أما Library level فيستبدل استدعاءات النظام بمزيفة."]},
+ {q:["What is hooking?","ما هو الـ hooking؟"],
+  a:[["Intercepting function calls, messages or events to alter or augment behavior","اعتراض استدعاءات الدوال أو الرسائل أو الأحداث لتغيير السلوك أو إضافته"],["Encrypting files","تشفير الملفات"],["Scanning ports","فحص المنافذ"],["Deleting logs","حذف السجلات"]],
+  e:["Rootkits use it to fake API output that would reveal them.","الـ rootkits تستخدمه لتزوير مخرجات API التي قد تكشفها."]},
+ {q:["How does DKOM hide a process?","كيف يخفي DKOM عملية ما؟"],
+  a:[["It unlinks the process from the active process list by modifying linked-list pointers","يفصل العملية عن قائمة العمليات النشطة بتعديل مؤشرات القائمة المرتبطة"],["It encrypts the process","يشفّر العملية"],["It renames the process","يغيّر اسم العملية"],["It moves it to another user","ينقلها لمستخدم آخر"]],
+  e:["This works because drivers and kernel modules have direct kernel memory access.","ممكن لأن التعريفات ووحدات النواة لها وصول مباشر لذاكرة النواة."]},
+ {q:["Which rootkit detection technique compares data against a set generated without common APIs?","أي تقنية كشف rootkit تقارن البيانات بمجموعة مولّدة بدون الـ APIs المعتادة؟"],
+  a:[["Cross-view based detection","Cross-view based detection"],["Integrity-based detection","Integrity-based detection"],["Signature-based detection","Signature-based detection"],["Runtime execution path profiling","Runtime execution path profiling"]],
+  e:["Any discrepancy between the two data sets indicates a rootkit.","أي اختلاف بين المجموعتين يدل على rootkit."]},
+ {q:["Which technique compares a snapshot of the file system, boot records or memory with a trusted baseline?","أي تقنية تقارن لقطة من نظام الملفات أو سجلات الإقلاع أو الذاكرة بخط أساس موثوق؟"],
+  a:[["Integrity-based detection","Integrity-based detection"],["Heuristic detection","Heuristic detection"],["Cross-view detection","Cross-view detection"],["Signature-based detection","Signature-based detection"]],
+  e:["Signature-based compares against a database of known rootkit fingerprints.","أما Signature-based فتقارن بقاعدة بصمات rootkits معروفة."]},
+ {q:["Which is a recommended defense against rootkits?","أي مما يلي دفاع موصى به ضد الـ rootkits؟"],
+  a:[["Reinstall the OS from a trusted source after backing up critical data","إعادة تثبيت النظام من مصدر موثوق بعد نسخ احتياطي للبيانات المهمة"],["Log in as administrator daily","تسجيل الدخول كأدمن يومياً"],["Install every available application","تثبيت كل التطبيقات المتاحة"],["Disable the firewall","تعطيل جدار الحماية"]],
+  e:["Also least privilege, integrity checks with digital fingerprints, and AV with rootkit protection.","وأيضاً أقل صلاحية وفحص السلامة بالبصمات الرقمية ومضاد فيروسات يحمي من rootkits."]}
+]
+};
 
 /* ---------- helpers ---------- */
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
@@ -598,7 +1245,7 @@ function makeQuiz(mount,key,pool,count){
   start(pool());
 }
 function showBest(){
-  [["c1","best-c1"],["c2","best-c2"]].forEach(([k,id])=>{const v=store.get("best-"+k);const e=document.getElementById(id);if(e&&v)e.innerHTML="Best: <b>"+v+"%</b> · أفضل نتيجة"});
+  [["c1","best-c1"],["c2","best-c2"],["c3","best-c3"],["c4","best-c4"]].forEach(([k,id])=>{const v=store.get("best-"+k);const e=document.getElementById(id);if(e&&v)e.innerHTML="Best: <b>"+v+"%</b> · أفضل نتيجة"});
 }
 
 /* ---------- stages ---------- */
@@ -645,7 +1292,7 @@ function buildStages(){
 }
 
 /* ---------- tabs ---------- */
-const VIEWS=["ch1","ch2","exam"];
+const VIEWS=["ch1","ch2","ch3","ch4","exam"];
 function show(t,push){
   if(!VIEWS.includes(t))t="ch1";
   VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==t;document.getElementById("tab-"+v).setAttribute("aria-selected",v===t)});
@@ -656,7 +1303,9 @@ document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>show(b.dataset.t));
 buildStages();
 makeQuiz("quiz-c1","c1",()=>Q.c1);
 makeQuiz("quiz-c2","c2",()=>Q.c2);
-makeQuiz("quiz-exam","exam",()=>Q.c1.concat(Q.c2),15);
+makeQuiz("quiz-c3","c3",()=>Q.c3);
+makeQuiz("quiz-c4","c4",()=>Q.c4);
+makeQuiz("quiz-exam","exam",()=>Q.c1.concat(Q.c2,Q.c3,Q.c4),20);
 showBest();
 show((location.hash||"#ch1").slice(1),false);
 </script>
