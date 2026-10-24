@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pentest Study Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+body{margin:0}
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --fg:#16202E; --muted:#5A6678; --line:#D9DFE8;
+  --ink:#1F3A5F; --ink-soft:#E6ECF5; --accent:#D2561F; --accent-soft:#FBE9DF;
+  --ok:#1E7A4C; --ok-soft:#DDF1E6; --bad:#B3261E; --bad-soft:#FAE0DE;
+  --font-body:'IBM Plex Sans','Segoe UI',Tahoma,sans-serif;
+  --font-ar:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0F1621; --surface:#172131; --fg:#E6EBF3; --muted:#9AA7BA; --line:#27344A;
+  --ink:#8FB2E6; --ink-soft:#1E2D45; --accent:#F08A56; --accent-soft:#3A2418;
+  --ok:#5FCB91; --ok-soft:#173326; --bad:#F2877F; --bad-soft:#3A1B19; color-scheme:dark}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.7 var(--font-body);padding-inline:max(16px,env(safe-area-inset-left,0px))}
+/* Arabic translation line sits directly under its English line */
+.ar{display:block;direction:rtl;text-align:right;font:400 .93em/1.8 var(--font-ar);color:var(--muted);font-style:normal;margin-top:2px}
+b .ar,strong .ar{font-weight:500}
+h2 .ar,h3 .ar,h1 .ar{font-weight:500;color:var(--muted)}
+h1 .ar{font-size:.55em;margin-top:6px}
+h2 .ar{font-size:.72em}
+h3 .ar{font-size:.85em}
+th .ar{color:inherit;opacity:.85}
+code,.en{font-family:var(--font-mono);font-size:.88em;direction:ltr;unicode-bidi:isolate}
+code{background:var(--ink-soft);color:var(--ink);padding:1px 7px;border-radius:5px;white-space:nowrap}
+h1,h2,h3{line-height:1.35;text-wrap:balance;margin:0}
+.wrap{max-width:980px;margin:0 auto}
+.top{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.top .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:8px}
+.brand{font-weight:700;font-size:17px;color:var(--ink);white-space:nowrap}
+.tabs{display:flex;gap:4px;margin-inline-start:auto;flex-wrap:wrap}
+.tab{font:500 14px/1.4 var(--font-body);border:1px solid transparent;background:none;color:var(--muted);padding:5px 14px;border-radius:8px;cursor:pointer;text-align:center}
+.tab .ar{text-align:center;font-size:.9em}
+.tab:hover{background:var(--ink-soft);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.tab[aria-selected="true"] .ar{color:var(--surface)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hero{padding-block:36px 20px}
+.tag{font:500 12px var(--font-mono);letter-spacing:.08em;color:var(--accent)}
+.hero h1{font-size:clamp(28px,5vw,42px);margin-top:6px}
+.hero p{color:var(--fg);max-width:64ch;margin:12px 0 0}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.chip{font-size:13px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 12px;color:var(--muted)}
+.chip b{color:var(--fg);font-weight:600}
+.cols{display:grid;grid-template-columns:210px minmax(0,1fr);gap:32px;padding-bottom:60px}
+.toc{position:sticky;top:72px;align-self:start;display:flex;flex-direction:column;gap:2px;font-size:14px;line-height:1.4}
+.toc a{color:var(--fg);text-decoration:none;padding:5px 10px;border-radius:6px;border-inline-start:2px solid var(--line)}
+.toc a .ar{font-size:.9em}
+.toc a:hover{background:var(--ink-soft);color:var(--ink)}
+.toc a.quizlink{color:var(--accent);font-weight:600}
+@media(max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+.sec{padding-block:26px;border-top:1px solid var(--line)}
+.sec:first-child{border-top:0;padding-top:6px}
+.sec h2{font-size:25px;color:var(--ink);margin-bottom:8px}
+.sec h3{font-size:17px;margin:18px 0 4px}
+.sec p{margin:8px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-block:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.card h3{margin:0 0 4px;font-size:16px;color:var(--ink)}
+.card p{margin:6px 0;font-size:15px}
+.card ul{padding-inline-start:20px;margin:6px 0 0;font-size:15px}
+.card li{margin:5px 0}
+.card .k{font:500 12px var(--font-mono);color:var(--accent);display:block;margin-bottom:4px}
+.key{background:var(--accent-soft);border-radius:10px;padding:14px 18px;margin-block:16px}
+.key h4{margin:0 0 6px;font-size:14px;color:var(--accent);letter-spacing:.02em}
+.key h4 .ar{color:var(--accent)}
+.key ul{margin:0;padding-inline-start:20px}
+.key li{margin:8px 0}
+.tw{overflow-x:auto;margin-block:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+th,td{padding:10px 14px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--ink);color:var(--surface);font-weight:600}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;color:var(--ink)}
+.stages{display:flex;gap:6px;flex-wrap:wrap;margin-block:14px}
+.st{font:500 14px var(--font-body);display:flex;gap:8px;align-items:center;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer}
+.st i{font:500 12px var(--font-mono);font-style:normal;color:var(--accent)}
+.st[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.st[aria-selected="true"] i{color:var(--surface)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 20px;min-height:120px}
+.panel h3{margin:0 0 6px;color:var(--ink)}
+.panel ul{margin:6px 0 0;padding-inline-start:20px}
+.panel li{margin:8px 0}
+.quiz{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:10px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin-bottom:10px}
+.bar{height:6px;background:var(--ink-soft);border-radius:99px;overflow:hidden;margin-bottom:16px}
+.bar>span{display:block;height:100%;background:var(--accent);transition:width .3s}
+.qtext{font-size:19px;font-weight:600;line-height:1.5;margin:0 0 14px}
+.qtext .ar{font-size:.9em;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{font:400 16px/1.5 var(--font-body);text-align:start;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;display:flex;gap:12px;align-items:flex-start}
+.opt .t{flex:1;min-width:0}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--ok-soft);border-color:var(--ok)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.opt .l{font:500 13px var(--font-mono);color:var(--muted);padding-top:3px}
+.why{margin-top:14px;padding:12px 16px;border-radius:10px;background:var(--ink-soft);font-size:15px}
+.why b{display:block;margin-bottom:2px}
+.why.good b{color:var(--ok)} .why.bad b{color:var(--bad)}
+.btn{font:600 15px var(--font-body);background:var(--ink);color:var(--surface);border:0;border-radius:9px;padding:8px 20px;cursor:pointer;text-align:center}
+.btn .ar{text-align:center;color:inherit;opacity:.9}
+.btn.alt{background:none;color:var(--ink);border:1.5px solid var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.score{font:700 54px/1 var(--font-body);color:var(--ink)}
+.score small{font-size:22px;color:var(--muted);font-weight:500}
+.rev{margin:14px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.rev li{background:var(--bad-soft);border-radius:8px;padding:10px 14px;font-size:15px}
+.rev li span{display:block;color:var(--muted);font-size:14px;margin-top:4px}
+.foot{padding-block:30px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);text-align:center}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="app">
+<header class="top"><div class="wrap">
+  <div class="brand">Pentest Study Guide</div>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-t="ch1" id="tab-ch1">Dossier: Basics &amp; Ethics<i class="ar">الدوسية: الأساسيات والأخلاقيات</i></button>
+    <button class="tab" role="tab" data-t="ch2" id="tab-ch2">Chapter 2: Pen Test Primer<i class="ar">الشابتر ٢</i></button>
+    <button class="tab" role="tab" data-t="exam" id="tab-exam">Final Exam<i class="ar">الاختبار الشامل</i></button>
+  </nav>
+</div></header>
+
+<main class="wrap">
+
+<!-- ============ DOSSIER ============ -->
+<div id="v-ch1" hidden>
+  <div class="hero">
+    <div class="tag">PENETRATION TESTING DOSSIER</div>
+    <h1>The Blueprint of Penetration Testing<i class="ar">مخطط الاختبار الاختراقي: المنهجيات والأخلاقيات والقانون</i></h1>
+    <p>Methodologies, ethics, and the legal landscape of vulnerability analysis.<i class="ar">المنهجيات والأخلاقيات والإطار القانوني لتحليل الثغرات.</i></p>
+    <div class="meta"><span class="chip"><b>9</b> sections · أقسام</span><span class="chip"><b>18</b> questions · سؤال</span><span class="chip" id="best-c1">Best: — · أفضل نتيجة</span></div>
+  </div>
+  <div class="cols">
+    <nav class="toc" aria-label="Dossier index">
+      <a href="#c1-def">1. Definition<i class="ar">التعريف</i></a>
+      <a href="#c1-spec">2. Assessment spectrum<i class="ar">طيف التقييم الأمني</i></a>
+      <a href="#c1-hat">3. Hacker taxonomy<i class="ar">أنواع الهاكرز</i></a>
+      <a href="#c1-box">4. Black / Gray / White box<i class="ar">أنواع المنهجيات</i></a>
+      <a href="#c1-eth">5. Ethical pillars<i class="ar">ركائز الأخلاقيات</i></a>
+      <a href="#c1-law">6. U.S. law<i class="ar">القانون الأمريكي</i></a>
+      <a href="#c1-glob">7. Global law<i class="ar">القوانين عالمياً</i></a>
+      <a href="#c1-cert">8. Certifications<i class="ar">الشهادات</i></a>
+      <a href="#c1-career">9. Career paths<i class="ar">المسار الوظيفي</i></a>
+      <a href="#c1-quiz" class="quizlink">Test yourself →<i class="ar">اختبر نفسك</i></a>
+    </nav>
+    <div>
+      <section class="sec" id="c1-def">
+        <h2>1. Defining the Objective: Attack Simulation, Not Compromise<i class="ar">١. التعريف: محاكاة هجوم وليس اختراقاً</i></h2>
+        <p>Penetration testing is a controlled, authorized simulation of an attack. It tests system security using real attack techniques, but never compromises or damages the target.<i class="ar">الاختبار الاختراقي محاكاة منضبطة ومصرّحة لهجوم. يختبر أمان النظام بتقنيات هجوم حقيقية، لكنه لا يخترق الهدف ولا يتلفه.</i></p>
+        <div class="tw"><table><thead><tr><th></th><th>The Attacker<i class="ar">المهاجم</i></th><th>The Penetration Tester<i class="ar">مختبر الاختراق</i></th></tr></thead><tbody>
+          <tr><td>Goal<i class="ar">الهدف</i></td><td>System compromise and data exploitation.<i class="ar">اختراق النظام واستغلال البيانات.</i></td><td>Test system security using actual attack techniques.<i class="ar">اختبار أمان النظام بتقنيات هجوم فعلية.</i></td></tr>
+          <tr><td>Method<i class="ar">الطريقة</i></td><td>Unstructured, opportunistic breaches.<i class="ar">اختراقات عشوائية انتهازية.</i></td><td>Formal process rooted in standard project management.<i class="ar">عملية رسمية مبنية على إدارة المشاريع القياسية.</i></td></tr>
+          <tr><td>Constraint<i class="ar">القيد</i></td><td>None.<i class="ar">لا يوجد.</i></td><td>Never compromises or damages the target system.<i class="ar">لا يخترق النظام الهدف ولا يتلفه أبداً.</i></td></tr></tbody></table></div>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>Penetration testing and hacking are not synonymous.<i class="ar">الاختبار الاختراقي والهاكينج ليسا شيئاً واحداً.</i></li>
+          <li>A pentest always starts with a contract and formal authorization.<i class="ar">الاختبار يبدأ دائماً بعقد وتصريح رسمي.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c1-spec">
+        <h2>2. The Security Assessment Spectrum<i class="ar">٢. طيف التقييم الأمني</i></h2>
+        <div class="grid">
+          <div class="card"><span class="k">AUDITS</span><h3>Audits<i class="ar">التدقيق</i></h3>
+            <p><b>Focus:</b> compliance and documentation.<i class="ar">التركيز: الامتثال والتوثيق.</i></p>
+            <p><b>Process:</b> passive. Reviews incident response, disaster recovery, and system logs (firewall, IDS).<i class="ar">الأسلوب: سلبي (Passive). يراجع الاستجابة للحوادث والتعافي من الكوارث وسجلات الأنظمة.</i></p></div>
+          <div class="card"><span class="k">VULNERABILITY SCANS</span><h3>Vulnerability Scans<i class="ar">فحص الثغرات</i></h3>
+            <p><b>Focus:</b> detection of known flaws.<i class="ar">التركيز: اكتشاف الثغرات المعروفة.</i></p>
+            <p><b>Process:</b> automated. Identifies CVEs as a baseline and helps select targets, but is not the test itself.<i class="ar">الأسلوب: آلي. يحدد الـ CVEs كخط أساس ويساعد في اختيار الأهداف، لكنه ليس الاختبار نفسه.</i></p></div>
+          <div class="card"><span class="k">PENETRATION TESTING</span><h3>Penetration Testing<i class="ar">الاختبار الاختراقي</i></h3>
+            <p><b>Focus:</b> flaw exploitation.<i class="ar">التركيز: استغلال الثغرات.</i></p>
+            <p><b>Process:</b> active. Manual use of hacking techniques to penetrate the system.<i class="ar">الأسلوب: فعّال (Active). استخدام يدوي لتقنيات الاختراق.</i></p></div>
+        </div>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>Audit = passive, scan = automated, pentest = active and manual.<i class="ar">التدقيق = سلبي، الفحص = آلي، الاختبار الاختراقي = فعّال ويدوي.</i></li>
+          <li>A scan finds the flaw; a pentest exploits it.<i class="ar">الفحص يكتشف الثغرة، والاختبار الاختراقي يستغلها.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c1-hat">
+        <h2>3. The Hacker Taxonomy Matrix<i class="ar">٣. أنواع الهاكرز</i></h2>
+        <p>Hackers are classified by technical skill and by ethical intent / legality.<i class="ar">يُصنَّف الهاكرز حسب المهارة التقنية والنية الأخلاقية والقانونية.</i></p>
+        <div class="grid">
+          <div class="card"><span class="k">SCRIPT KIDDY</span><h3>Script Kiddy<i class="ar">مبتدئ بأدوات جاهزة</i></h3><p>Unskilled individuals who download and deploy existing tools, masquerading as skilled hackers.<i class="ar">أشخاص بلا مهارة يحمّلون أدوات موجودة ويستخدمونها ويتظاهرون بأنهم هاكرز محترفون.</i></p></div>
+          <div class="card"><span class="k">BLACK HAT (CRACKER)</span><h3>Black Hat Hacker<i class="ar">الهاكر الأسود</i></h3><p>Skilled actors who break into systems to do something malicious, illegal, or harmful.<i class="ar">محترفون يخترقون الأنظمة لغرض خبيث أو غير قانوني أو ضار.</i></p></div>
+          <div class="card"><span class="k">GRAY HAT</span><h3>Gray Hat Hacker<i class="ar">الهاكر الرمادي</i></h3><p>Usually obeys the law, but occasionally crosses the line into black hat territory.<i class="ar">يلتزم بالقانون غالباً، لكنه أحياناً يتجاوز الخط إلى منطقة الـ Black Hat.</i></p></div>
+          <div class="card"><span class="k">WHITE HAT (ETHICAL)</span><h3>White Hat Hacker<i class="ar">الهاكر الأخلاقي</i></h3><p>Uses reverse-engineering, probing, and hacking skills exclusively in a legal, authorized manner.<i class="ar">يستخدم الهندسة العكسية والفحص ومهارات الاختراق حصرياً بطريقة قانونية ومصرّحة.</i></p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c1-box">
+        <h2>4. Evaluating the Three Engagement Methodologies<i class="ar">٤. المنهجيات الثلاث: Black / Gray / White Box</i></h2>
+        <div class="tw"><table><thead><tr><th></th><th>Black Box</th><th>Gray Box</th><th>White Box</th></tr></thead><tbody>
+          <tr><td>Information<i class="ar">المعلومات</i></td><td>Minimal (org name, URL, gateway IP only).<i class="ar">الحد الأدنى (اسم المنظمة، الرابط، IP البوابة فقط).</i></td><td>Partial (IPs of key servers, basic OS data).<i class="ar">جزئية (IPs السيرفرات الرئيسية، بيانات نظام التشغيل الأساسية).</i></td><td>Complete architectural transparency.<i class="ar">شفافية كاملة للبنية.</i></td></tr>
+          <tr><td>Realism<i class="ar">الواقعية</i></td><td>Exact mimic of an external attack.<i class="ar">تقليد دقيق لهجوم خارجي.</i></td><td>Moderate (simulates a partially informed attacker).<i class="ar">متوسطة (تحاكي مهاجماً عنده معلومات جزئية).</i></td><td>Low (targeted testing, no discovery phase).<i class="ar">منخفضة (اختبار موجّه بلا مرحلة اكتشاف).</i></td></tr>
+          <tr><td>Cost<i class="ar">التكلفة</i></td><td>Highest (requires extensive discovery / footprinting).<i class="ar">الأعلى (تحتاج مرحلة اكتشاف وfootprinting موسّعة).</i></td><td>Medium (less discovery needed, acceptable cost).<i class="ar">متوسطة (اكتشاف أقل، وتكلفة مقبولة).</i></td><td>Lowest.<i class="ar">الأقل.</i></td></tr>
+          <tr><td>Performed by<i class="ar">المنفِّذ</i></td><td>Outside party only.<i class="ar">طرف خارجي فقط.</i></td><td>Internal or external.<i class="ar">داخلي أو خارجي.</i></td><td>Internal staff (though bias is a risk) or external.<i class="ar">موظفون داخليون (مع خطر الانحياز) أو خارجي.</i></td></tr></tbody></table></div>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>In a White Box test the tester skips the scanning phase and receives a full map of firewalls, IDS, and IP addresses.<i class="ar">في اختبار White Box يتخطى المختبر مرحلة الـ scanning ويستلم خريطة كاملة للـ firewalls والـ IDS وعناوين الـ IP.</i></li>
+          <li>Precise OS identification allows highly targeted vulnerability testing from day one.<i class="ar">معرفة نظام التشغيل بدقة تسمح باختبار ثغرات موجّه جداً من اليوم الأول.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c1-eth">
+        <h2>5. The Three Pillars of Ethical Engagement<i class="ar">٥. الركائز الثلاث للالتزام الأخلاقي</i></h2>
+        <div class="grid">
+          <div class="card"><span class="k">MANDATE_01</span><h3>Absolute Confidentiality<i class="ar">السرية المطلقة</i></h3><p>The tester inherently views highly sensitive private data. All client information must be protected, regardless of a formal NDA.<i class="ar">المختبر يطّلع بطبيعة عمله على بيانات خاصة حساسة جداً. يجب حماية كل معلومات العميل حتى لو لم يوجد NDA رسمي.</i></p></div>
+          <div class="card"><span class="k">MANDATE_02</span><h3>Honest Capability ("Keep in Your Lane")<i class="ar">الصدق في القدرات</i></h3><p>High market demand tempts exaggeration. Ethical testers are transparent about their skill sets (e.g., admitting a lack of social engineering experience).<i class="ar">الطلب العالي في السوق يغري بالمبالغة. المختبر الأخلاقي شفاف بشأن مهاراته (مثلاً يعترف بنقص خبرته في الهندسة الاجتماعية).</i></p></div>
+          <div class="card"><span class="k">MANDATE_03</span><h3>Zero-Disruption ("If You Break It, You Bought It")<i class="ar">عدم التعطيل</i></h3><p>Roles and testing conditions must be explicitly contracted. Testers must minimize operational disruption, using backup systems for sensitive targets when necessary.<i class="ar">يجب تحديد الأدوار وظروف الاختبار صراحةً في العقد. على المختبر تقليل التعطيل التشغيلي واستخدام أنظمة احتياطية للأهداف الحساسة عند الحاجة.</i></p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c1-law">
+        <h2>6. The U.S. Federal Legal Framework<i class="ar">٦. الإطار القانوني الفيدرالي الأمريكي</i></h2>
+        <div class="grid">
+          <div class="card"><span class="k">18 U.S.C. § 1030</span><h3>Computer Fraud and Abuse Act (CFAA)<i class="ar">قانون الاحتيال وإساءة استخدام الحاسب</i></h3><p>The pivotal legislation. Protects federal, financial, and commerce systems. Criminalizes unauthorized access to national security, financial, or consumer data.<i class="ar">التشريع المحوري. يحمي الأنظمة الفيدرالية والمالية والتجارية، ويجرّم الوصول غير المصرّح لبيانات الأمن القومي أو البيانات المالية أو بيانات المستهلكين.</i></p></div>
+          <div class="card"><span class="k">18 U.S.C. § 2701</span><h3>Stored Communications Act<i class="ar">قانون الاتصالات المخزّنة</i></h3><p>Criminalizes unauthorized access to or alteration of electronic storage systems. Penalties include up to 5 years in prison (10 years for subsequent offenses).<i class="ar">يجرّم الوصول غير المصرّح لأنظمة التخزين الإلكترونية أو تعديلها. العقوبة حتى 5 سنوات سجن (10 سنوات للمخالفات اللاحقة).</i></p></div>
+          <div class="card"><span class="k">EXT. OF CFAA</span><h3>Identity Theft Enforcement Act<i class="ar">قانون مكافحة سرقة الهوية</i></h3><p>Expands jurisdiction to purely domestic/intra-state incidents. Widens the definition of cyber extortion to include threats to damage systems or steal data.<i class="ar">يوسّع الاختصاص ليشمل الحوادث المحلية داخل الولاية الواحدة، ويوسّع تعريف الابتزاز الإلكتروني ليشمل التهديد بإتلاف الأنظمة أو سرقة البيانات.</i></p></div>
+          <div class="card"><span class="k">18 U.S.C. § 1029</span><h3>Access Devices Act<i class="ar">قانون أجهزة الوصول</i></h3><p>Criminalizes fraud and related activity using genuine or counterfeit access devices.<i class="ar">يجرّم الاحتيال والأنشطة المرتبطة به باستخدام أجهزة وصول حقيقية أو مزوّرة.</i></p></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c1-glob">
+        <h2>7. Global Cyber Law Perspectives<i class="ar">٧. القوانين السيبرانية عالمياً</i></h2>
+        <div class="tw"><table><thead><tr><th>Region<i class="ar">الجهة</i></th><th>Law<i class="ar">القانون</i></th><th>Idea<i class="ar">الفكرة</i></th></tr></thead><tbody>
+          <tr><td>EU<i class="ar">الاتحاد الأوروبي</i></td><td>Directive 2013/40</td><td>Standardizes laws against attacks on information systems.<i class="ar">يوحّد القوانين ضد الهجمات على أنظمة المعلومات.</i></td></tr>
+          <tr><td>Saudi Arabia<i class="ar">السعودية</i></td><td>Anti-Cyber Crime Law<i class="ar">نظام مكافحة الجرائم المعلوماتية</i></td><td>Protects against material impinging on public order, religious values, or privacy.<i class="ar">يحمي من المحتوى الذي يمس النظام العام أو القيم الدينية أو الخصوصية.</i></td></tr>
+          <tr><td>Jordan<i class="ar">الأردن</i></td><td>IS Crime Law 2010</td><td>Strict fines (up to 1000 Dinars) and imprisonment for unauthorized access, alteration, or system obstruction.<i class="ar">غرامات صارمة (حتى 1000 دينار) وسجن للوصول غير المصرّح أو التعديل أو تعطيل النظام.</i></td></tr>
+          <tr><td>Japan<i class="ar">اليابان</i></td><td>Unauthorized Computer Access Law (1998)</td><td>Strictly restricts using alternative identification codes to breach telecommunications.<i class="ar">يقيّد بصرامة استخدام رموز تعريف بديلة لاختراق الاتصالات.</i></td></tr></tbody></table></div>
+        <div class="key"><h4>Golden rule<i class="ar">القاعدة الذهبية</i></h4><ul><li>Any access without permission is very likely to be a crime in any jurisdiction.<i class="ar">أي وصول بدون إذن يُحتمل جداً أن يكون جريمة في أي دولة.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c1-cert">
+        <h2>8. Navigating Industry Certifications<i class="ar">٨. الشهادات المهنية</i></h2>
+        <div class="tw"><table><thead><tr><th>Tier<i class="ar">المستوى</i></th><th>Certification<i class="ar">الشهادة</i></th><th>Cost<i class="ar">التكلفة</i></th><th>Notes<i class="ar">ملاحظات</i></th></tr></thead><tbody>
+          <tr><td>Premium</td><td>GPEN (SANS)</td><td>$4,000</td><td>High rigor. Comprehensive lectures and labs, but independent self-study is notoriously difficult.<i class="ar">صرامة عالية. محاضرات ومعامل شاملة، لكن الدراسة الذاتية صعبة جداً.</i></td></tr>
+          <tr><td>Practical</td><td>OSCP (Offensive Security)</td><td>$800</td><td>High rigor. Exceptional industry reputation. Grueling real-time practical hacking exam.<i class="ar">صرامة عالية وسمعة ممتازة. امتحان عملي شاق في الاختراق الفعلي.</i></td></tr>
+          <tr><td>Baseline</td><td>CEH &amp; CISSP</td><td>~$550</td><td>Broad focus. CEH has wide tool coverage but overlooks key subjects. CISSP is general security, lacking deep pentest focus.<i class="ar">تركيز واسع. CEH يغطي أدوات كثيرة لكنه يفوّت مواضيع أساسية. CISSP أمن عام بدون تركيز عميق على الاختبار الاختراقي.</i></td></tr>
+          <tr><td>Alternative</td><td>Mile2 &amp; PPT</td><td>$99 – variable<i class="ar">متغيّر</i></td><td>Mile2 offers an online tiered structure. PPT is an unfamiliarized certification.<i class="ar">Mile2 تقدم هيكلاً متدرجاً أونلاين. PPT شهادة غير مألوفة.</i></td></tr></tbody></table></div>
+      </section>
+
+      <section class="sec" id="c1-career">
+        <h2>9. Professional Trajectories &amp; the Anatomy of an Assessor<i class="ar">٩. المسارات المهنية وصفات المقيِّم المحترف</i></h2>
+        <div class="grid">
+          <div class="card"><h3>Security Administration<i class="ar">إدارة الأمن</i></h3><p>Applying offensive methodologies internally to harden an organization's own architecture.<i class="ar">تطبيق المنهجيات الهجومية داخلياً لتقوية بنية المنظمة نفسها.</i></p></div>
+          <div class="card"><h3>Commercial Penetration Testing<i class="ar">الاختبار الاختراقي التجاري</i></h3><p>Operating as an external consultant executing Black, Gray, and White box contracts.<i class="ar">العمل كمستشار خارجي ينفذ عقود Black وGray وWhite Box.</i></p></div>
+          <div class="card"><h3>Government &amp; National Defense<i class="ar">الحكومة والدفاع الوطني</i></h3><p>Securing classified infrastructure and responding to advanced state-sponsored threats.<i class="ar">تأمين البنى المصنّفة والاستجابة للتهديدات المتقدمة المدعومة من دول.</i></p></div>
+          <div class="card"><h3>Law Enforcement<i class="ar">إنفاذ القانون</i></h3><p>Using deep system knowledge to investigate cyber extortion, unauthorized access, and digital crimes.<i class="ar">استخدام المعرفة العميقة بالأنظمة للتحقيق في الابتزاز الإلكتروني والوصول غير المصرّح والجرائم الرقمية.</i></p></div>
+        </div>
+        <div class="key"><h4>Anatomy of a professional assessor<i class="ar">أركان المقيِّم المحترف</i></h4><ul>
+          <li><b>Technical Methodology:</b> mastery of active exploitation across Black, Gray, and White box environments.<i class="ar">المنهجية التقنية: إتقان الاستغلال الفعلي في بيئات Black وGray وWhite Box.</i></li>
+          <li><b>Ethical Discipline:</b> commitment to confidentiality, transparency, and zero disruption.<i class="ar">الانضباط الأخلاقي: الالتزام بالسرية والشفافية وعدم التعطيل.</i></li>
+          <li><b>Verified Expertise:</b> validation through practical certifications (OSCP, GPEN).<i class="ar">الخبرة الموثّقة: إثباتها بشهادات عملية (OSCP, GPEN).</i></li>
+          <li><b>Legal Adherence:</b> strict operation within authorized boundaries.<i class="ar">الالتزام القانوني: العمل ضمن الحدود المصرّح بها بصرامة.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c1-quiz"><h2>Test yourself: Dossier<i class="ar">اختبر نفسك: الدوسية</i></h2><div id="quiz-c1"></div></section>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 2 ============ -->
+<div id="v-ch2" hidden>
+  <div class="hero">
+    <div class="tag">CHAPTER 2 · PEN TEST PRIMER</div>
+    <h1>Vulnerability Analysis and Assessment<i class="ar">تحليل الثغرات وتقييمها</i></h1>
+    <p>The seven pentest stages, information gathering, port scanning with Nmap, and vulnerability scanning with Nessus, NSE and Nikto.<i class="ar">مراحل الاختبار الاختراقي السبع، وجمع المعلومات، وفحص المنافذ بـ Nmap، وفحص الثغرات بـ Nessus وNSE وNikto.</i></p>
+    <div class="meta"><span class="chip"><b>6</b> sections · أقسام</span><span class="chip"><b>30</b> questions · سؤال</span><span class="chip" id="best-c2">Best: — · أفضل نتيجة</span></div>
+  </div>
+  <div class="cols">
+    <nav class="toc" aria-label="Chapter 2 index">
+      <a href="#c2-def">1. Pentest definition<i class="ar">التعريف</i></a>
+      <a href="#c2-stages">2. The 7 stages<i class="ar">المراحل السبع</i></a>
+      <a href="#c2-report">3. The report<i class="ar">التقرير</i></a>
+      <a href="#c2-info">4. Information gathering<i class="ar">جمع المعلومات</i></a>
+      <a href="#c2-nmap">5. Port scanning (Nmap)<i class="ar">فحص المنافذ</i></a>
+      <a href="#c2-vuln">6. Finding vulnerabilities<i class="ar">إيجاد الثغرات</i></a>
+      <a href="#c2-quiz" class="quizlink">Test yourself →<i class="ar">اختبر نفسك</i></a>
+    </nav>
+    <div>
+      <section class="sec" id="c2-def">
+        <h2>1. Penetration Testing (Pentest)<i class="ar">١. الاختبار الاختراقي</i></h2>
+        <p>Pentesting involves simulating real attacks to assess the risk associated with potential security breaches.<i class="ar">الاختبار الاختراقي يعني محاكاة هجمات حقيقية لتقييم المخاطر المرتبطة بالاختراقات الأمنية المحتملة.</i></p>
+        <p>On a pentest (as opposed to a vulnerability assessment), the testers not only discover vulnerabilities but also <b>exploit</b> them, where possible.<i class="ar">في الـ pentest (بخلاف الـ vulnerability assessment) المختبرون لا يكتفون باكتشاف الثغرات بل <b>يستغلونها</b> متى أمكن.</i></p>
+      </section>
+
+      <section class="sec" id="c2-stages">
+        <h2>2. The Stages of the Penetration Test<i class="ar">٢. مراحل الاختبار الاختراقي</i></h2>
+        <p>Tap a stage to see its details.<i class="ar">اضغط على أي مرحلة لتشوف تفاصيلها.</i></p>
+        <div class="stages" id="stages" role="tablist" aria-label="Stages"></div>
+        <div class="panel" id="stagepanel" role="tabpanel" aria-live="polite"></div>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>Order: Pre-engagement → Information gathering → Threat modeling → Vulnerability analysis → Exploitation → Post exploitation → Reporting.<i class="ar">الترتيب: التحضير ← جمع المعلومات ← نمذجة التهديدات ← تحليل الثغرات ← الاستغلال ← ما بعد الاستغلال ← التقرير.</i></li>
+          <li>The "get out of jail free" card is your written authorization. If the target is hosted by a third party, verify the client has formal approval from that party.<i class="ar">بطاقة "get out of jail free" هي تصريحك المكتوب. إذا كان الهدف مستضافاً عند طرف ثالث، تأكد أن العميل حاصل على موافقة رسمية من ذلك الطرف.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c2-report">
+        <h2>3. The Pentest Report<i class="ar">٣. تقرير الاختبار الاختراقي</i></h2>
+        <p>Writing a good report is an art. It should include both an executive summary and a technical report.<i class="ar">كتابة تقرير جيد فن يحتاج ممارسة، ويجب أن يحتوي على ملخص تنفيذي وتقرير تقني.</i></p>
+        <div class="grid">
+          <div class="card"><span class="k">1. EXECUTIVE SUMMARY</span><h3>Executive Summary<i class="ar">الملخص التنفيذي</i></h3>
+            <p>Goals of the test and a high-level overview of findings. Audience: the executives in charge of the security program.<i class="ar">أهداف الاختبار ونظرة عامة عالية المستوى على النتائج. الجمهور: المدراء التنفيذيون المسؤولون عن برنامج الأمن.</i></p>
+            <ul>
+              <li><b>Background:</b> purpose of the test and definitions of unfamiliar terms.<i class="ar">الخلفية: غرض الاختبار وتعريف المصطلحات غير المألوفة.</i></li>
+              <li><b>Overall posture:</b> effectiveness of the test, issues found (e.g., MS08-067), and general causes such as a lack of patching.<i class="ar">الوضع العام: فعالية الاختبار والمشاكل المكتشفة وأسبابها العامة كغياب التحديثات.</i></li>
+              <li><b>Risk profile:</b> overall rank of the organization's security posture vs. similar organizations (high / moderate / low).<i class="ar">ملف المخاطر: ترتيب المنظمة أمنياً مقارنة بمثيلاتها (عالٍ / متوسط / منخفض).</i></li>
+              <li><b>General findings:</b> synopsis of issues with statistics and metrics.<i class="ar">النتائج العامة: ملخص المشاكل مع إحصائيات ومقاييس.</i></li>
+              <li><b>Recommendation summary:</b> high-level tasks to remediate the issues.<i class="ar">ملخص التوصيات: المهام العامة لمعالجة المشاكل.</i></li>
+              <li><b>Strategic road map:</b> short- and long-term goals.<i class="ar">خارطة الطريق الاستراتيجية: أهداف قصيرة وطويلة المدى.</i></li></ul></div>
+          <div class="card"><span class="k">2. TECHNICAL REPORT</span><h3>Technical Report<i class="ar">التقرير التقني</i></h3>
+            <p>Offers the technical details of the test.<i class="ar">يقدم التفاصيل التقنية للاختبار.</i></p>
+            <ul>
+              <li><b>Introduction:</b> scope, contacts, etc.<i class="ar">المقدمة: النطاق وجهات الاتصال.</i></li>
+              <li><b>Information gathering:</b> especially the client's Internet footprint.<i class="ar">جمع المعلومات: خصوصاً البصمة الرقمية للعميل على الإنترنت.</i></li>
+              <li><b>Vulnerability assessment:</b> findings of the analysis phase.<i class="ar">تقييم الثغرات: نتائج مرحلة التحليل.</i></li>
+              <li><b>Exploitation / verification:</b> findings of the exploitation phase.<i class="ar">الاستغلال / التحقق: نتائج مرحلة الاستغلال.</i></li>
+              <li><b>Post exploitation:</b> findings of that phase.<i class="ar">ما بعد الاستغلال: نتائج تلك المرحلة.</i></li>
+              <li><b>Risk/exposure:</b> quantitative description of risk, estimating the loss if exploited.<i class="ar">المخاطر / التعرّض: وصف كمّي للمخاطر وتقدير الخسارة لو استُغلت الثغرات.</i></li>
+              <li><b>Conclusion:</b> final overview.<i class="ar">الخاتمة: نظرة ختامية.</i></li></ul></div>
+        </div>
+      </section>
+
+      <section class="sec" id="c2-info">
+        <h2>4. Knowledge Gathering (OSINT)<i class="ar">٤. جمع المعرفة (OSINT)</i></h2>
+        <p>Open source intelligence (OSINT) is gathered from legal sources like public records and social media. The success of a pentest often depends on this phase.<i class="ar">الـ OSINT هو جمع المعلومات من مصادر قانونية كالسجلات العامة ووسائل التواصل. نجاح الاختبار غالباً يعتمد على هذه المرحلة.</i></p>
+        <div class="tw"><table><thead><tr><th>Tool<i class="ar">الأداة</i></th><th>What it does<i class="ar">وظيفتها</i></th></tr></thead><tbody>
+          <tr><td>Netcraft</td><td>Logs uptime and queries the underlying software of a site; also offers anti-phishing. Useful for ruling out vulnerabilities that affect only other server types, or for crafting social engineering.<i class="ar">يسجل مدة التشغيل (uptime) ويستعلم عن البرمجيات التي يعمل عليها الموقع، ويقدم خدمات مضادة للتصيد. مفيد لاستبعاد ثغرات لا تخص نوع السيرفر أو لتصميم هندسة اجتماعية.</i></td></tr>
+          <tr><td>Whois</td><td>Domain registrars keep owner and contact records. With private registration (e.g., Domains By Proxy) you learn little, but the name servers remain visible.<i class="ar">مسجّلو الدومينات يحتفظون بسجلات المالك والتواصل. مع التسجيل الخاص (مثل Domains By Proxy) تعرف القليل، لكن تظهر الـ name servers.</i></td></tr>
+          <tr><td>nslookup</td><td>Returns a site's IP address. With <code>set type=mx</code> it reveals the mail servers (e.g., Google Mail).<i class="ar">يرجّع عنوان IP للموقع. ومع <code>set type=mx</code> يكشف سيرفرات البريد (مثل Google Mail).</i></td></tr>
+          <tr><td>host</td><td><code>host -t ns domain</code> lists name servers. <code>host -l domain ns</code> performs a zone transfer.<i class="ar">الأمر <code>host -t ns</code> يعرض الـ name servers، والأمر <code>host -l</code> يعمل zone transfer.</i></td></tr>
+          <tr><td>theHarvester</td><td>Python tool that scours search engines (Google, Bing, PGP, LinkedIn) for emails and hosts.<i class="ar">أداة Python تفتّش محركات البحث (Google, Bing, PGP, LinkedIn) عن الإيميلات والـ hosts.</i></td></tr>
+          <tr><td>Maltego</td><td>Data-mining tool that visualizes OSINT. It uses publicly available information, so recon with it is legal.<i class="ar">أداة data-mining تعرض الـ OSINT بشكل مرئي. تستخدم معلومات عامة فالاستطلاع بها قانوني.</i></td></tr></tbody></table></div>
+        <h3>DNS Zone Transfers<i class="ar">نقل منطقة الـ DNS</i></h3>
+        <p>Many system administrators set up DNS zone transfers insecurely, so anyone can download all DNS records for a domain. Example: <span class="en">zoneedit.com</span>. From the records we can guess roles, e.g., <span class="en">mail2.zoneedit.com</span> is probably a mail server, so we check ports 25 (SMTP) and 110 (POP3).<i class="ar">كثير من مدراء الأنظمة يضبطون الـ zone transfer بشكل غير آمن، فأي شخص يقدر ينزّل كل سجلات الـ DNS للدومين. من السجلات نخمّن الأدوار، مثلاً mail2 غالباً سيرفر بريد فنفحص المنفذين 25 (SMTP) و110 (POP3).</i></p>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>Services exposed for remote access (web, mail, VPN, SSH, FTP) are common attack surfaces; without two-factor authentication, guessing valid credentials can be simple.<i class="ar">الخدمات المكشوفة للوصول عن بعد (ويب، بريد، VPN، SSH، FTP) أسطح هجوم شائعة، وبدون مصادقة ثنائية قد يسهل تخمين بيانات الدخول.</i></li>
+          <li>Emails found (e.g., with theHarvester) help guess usernames and passwords.<i class="ar">الإيميلات المكتشفة (مثلاً بـ theHarvester) تساعد في تخمين أسماء المستخدمين وكلمات المرور.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c2-nmap">
+        <h2>5. Port Scanning with Nmap<i class="ar">٥. فحص المنافذ بـ Nmap</i></h2>
+        <p>Port scanning determines which ports on a network are open and could be receiving or sending data. Nmap is the industry standard.<i class="ar">فحص المنافذ يحدد المنافذ المفتوحة على الشبكة التي قد تستقبل أو ترسل بيانات. الـ Nmap هو المعيار الصناعي.</i></p>
+        <div class="tw"><table><thead><tr><th>Scan<i class="ar">الفحص</i></th><th>Command<i class="ar">الأمر</i></th><th>How it works<i class="ar">طريقة العمل</i></th></tr></thead><tbody>
+          <tr><td>SYN scan</td><td><code>nmap -sS</code></td><td>Sends SYN and waits for SYN-ACK; never sends the final ACK. Called a stealthy scan. No SYN-ACK = closed or filtered.<i class="ar">يرسل SYN وينتظر SYN-ACK ولا يرسل ACK الأخير. يسمى فحصاً خفياً (stealthy). بدون SYN-ACK = المنفذ مغلق أو مفلتر.</i></td></tr>
+          <tr><td>Version scan</td><td><code>nmap -sV</code></td><td>Completes the connection, then determines the software and version (banner grabbing).<i class="ar">يكمل الاتصال ثم يحدد البرنامج ونسخته (banner grabbing).</i></td></tr>
+          <tr><td>UDP scan</td><td><code>nmap -sU</code></td><td>Sends a UDP packet. Response = open. ICMP Port Unreachable = closed. No response = open or filtered, so Nmap can't always tell.<i class="ar">يرسل حزمة UDP. وصول رد = مفتوح. ICMP Port Unreachable = مغلق. لا رد = مفتوح أو مفلتر، فلا يستطيع Nmap التفريق دائماً.</i></td></tr>
+          <tr><td>Specific port</td><td><code>nmap -p 3232</code></td><td>By default Nmap scans only the 1,000 most "interesting" ports, not all 65,535.<i class="ar">افتراضياً يفحص Nmap أهم 1,000 منفذ فقط وليس كل الـ 65,535.</i></td></tr>
+          <tr><td>Save output</td><td><code>-oA name</code></td><td>Logs results in all formats (.nmap, .gnmap, .xml).<i class="ar">يحفظ النتائج بكل الصيغ (.nmap, .gnmap, .xml).</i></td></tr></tbody></table></div>
+        <div class="key"><h4>Key points<i class="ar">نقاط مهمة</i></h4><ul>
+          <li>Rule of thumb: scan ports <code>1-65535</code> on your pentests so nothing is missed.<i class="ar">قاعدة عملية: افحص المنافذ <code>1-65535</code> في اختباراتك حتى لا يفوتك شيء.</i></li>
+          <li>Probing a port aggressively with a version scan can crash the service (as with port 3232 in the example).<i class="ar">فحص المنفذ بشكل عدواني بـ version scan قد يتسبب في تعطل الخدمة (كما حصل مع المنفذ 3232 في المثال).</i></li>
+          <li>SYN and version scans are TCP scans; they do not query UDP ports.<i class="ar">فحصا SYN والنسخة هما TCP ولا يفحصان منافذ UDP.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c2-vuln">
+        <h2>6. Finding Vulnerabilities<i class="ar">٦. إيجاد الثغرات</i></h2>
+        <p>Identifying vulnerabilities means actively searching for issues that will lead to compromise in the exploitation phase. A skilled pentester's analysis is better than an automated tool's results.<i class="ar">تحديد الثغرات يعني البحث الفعّال عن مشاكل تقود للاختراق في مرحلة الاستغلال. تحليل المختبر الماهر أفضل من نتائج الأدوات الآلية.</i></p>
+        <div class="grid">
+          <div class="card"><h3>Automated scanning<i class="ar">الفحص الآلي</i></h3><p>Tools such as Nessus.<i class="ar">أدوات مثل Nessus.</i></p></div>
+          <div class="card"><h3>Targeted analysis<i class="ar">التحليل الموجّه</i></h3><p>Focused analysis of specific services.<i class="ar">تحليل مركّز لخدمات محددة.</i></p></div>
+          <div class="card"><h3>Manual research<i class="ar">البحث اليدوي</i></h3><p>The better way to improve your practice.<i class="ar">الطريقة الأفضل لتطوير ممارستك.</i></p></div>
+        </div>
+        <h3>Nessus<i class="ar">نيسوس</i></h3>
+        <p>One of the most widely used commercial vulnerability scanners (Tenable). Its database covers many platforms and protocols and performs a series of checks for known issues. Nessus Home is limited to <b>16 IP addresses</b>. Start it with <code>service nessusd start</code>. <b>Policies</b> are like configuration files that tell Nessus which checks and port scanners to run. Its results showed the Windows XP target missing the MS08-067 patch, and note whether exploit code exists in Metasploit.<i class="ar">من أشهر ماسحات الثغرات التجارية (Tenable). قاعدة بياناته تغطي منصات وبروتوكولات كثيرة وتجري سلسلة فحوصات للثغرات المعروفة. نسخة Nessus Home محدودة بـ <b>16 عنوان IP</b>. تشغيله بالأمر <code>service nessusd start</code>. الـ <b>Policies</b> تشبه ملفات إعداد تحدد الفحوصات والـ port scanners. أظهرت نتائجه أن جهاز Windows XP ينقصه patch الـ MS08-067، وتوضح هل يوجد exploit في Metasploit.</i></p>
+        <h3>Nmap Scripting Engine (NSE)<i class="ar">محرك سكربتات Nmap</i></h3>
+        <p>Lets you run public scripts or write your own: information gathering, active vulnerability assessment, signs of previous compromise.<i class="ar">يتيح تشغيل سكربتات عامة أو كتابة سكربتاتك: جمع معلومات، تقييم ثغرات فعّال، البحث عن علامات اختراق سابق.</i></p>
+        <ul>
+          <li><code>nmap -sC</code> runs the default-category scripts. It showed SMTP allows <b>VRFY</b> (checks whether a username exists) and that XAMPP 1.7.2 is out of date.<i class="ar">الأمر <code>-sC</code> يشغّل سكربتات الفئة الافتراضية. كشف أن SMTP يسمح بـ <b>VRFY</b> (يتحقق من وجود اسم مستخدم) وأن XAMPP 1.7.2 قديم.</i></li>
+          <li><code>nmap --script=nfs-ls</code> found an NFS share. A writable <code>.ssh</code> directory means you can add your SSH key to authorized keys and log in remotely.<i class="ar">الأمر <code>--script=nfs-ls</code> اكتشف NFS share. وجود مجلد <code>.ssh</code> قابل للكتابة يعني إمكانية إضافة مفتاح SSH الخاص بك إلى authorized keys وتسجيل الدخول عن بعد.</i></li></ul>
+        <h3>Nikto<i class="ar">نيكتو</i></h3>
+        <p>A web application vulnerability scanner built into Kali: like Nessus for web apps. It looks for dangerous files, outdated versions, and misconfigurations. Run it with <code>nikto -h host</code>. It found a vulnerable TikiWiki install (OSVDB-40478) with a Metasploit exploit.<i class="ar">ماسح ثغرات تطبيقات الويب مدمج في Kali، مثل Nessus لكن للويب. يبحث عن ملفات خطرة ونسخ قديمة وإعدادات خاطئة. تشغيله بالأمر <code>nikto -h host</code>. اكتشف تثبيت TikiWiki ضعيفاً (OSVDB-40478) له exploit في Metasploit.</i></p>
+        <div class="key"><h4>Why use vulnerability scanners?<i class="ar">لماذا نستخدم الماسحات؟</i></h4><ul>
+          <li>Many pentests are performed within a short time, and scanners give good results after a long scan.<i class="ar">كثير من الاختبارات تتم في وقت قصير، والماسحات تعطي نتائج جيدة بعد فحص طويل.</i></li>
+          <li>Verify results manually and follow up with manual analysis.<i class="ar">تحقق من النتائج يدوياً وتابعها بتحليل يدوي.</i></li></ul></div>
+      </section>
+
+      <section class="sec" id="c2-quiz"><h2>Test yourself: Chapter 2<i class="ar">اختبر نفسك: الشابتر ٢</i></h2><div id="quiz-c2"></div></section>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXAM ============ -->
+<div id="v-exam" hidden>
+  <div class="hero">
+    <div class="tag">FINAL REVIEW</div>
+    <h1>Final Exam<i class="ar">الاختبار الشامل</i></h1>
+    <p>15 random questions from both sources. Questions and answer order change every time.<i class="ar">١٥ سؤالاً عشوائياً من المصدرين. الأسئلة وترتيب الخيارات يتغيران في كل مرة.</i></p>
+  </div>
+  <div class="cols" style="grid-template-columns:minmax(0,1fr)"><div id="quiz-exam"></div></div>
+</div>
+</main>
+<div class="wrap foot">Based on Chapter 2 slides and the Penetration Testing Dossier · مبني على شرائح الشابتر ٢ ودوسية Penetration Testing</div>
+</div>
+
+<script>
+/* Each item: q=[EN,AR], a=[[EN,AR],...] (first option is correct, order is shuffled), e=[EN,AR] */
+const Q = {
+c1: [
+ {q:["What is the main goal of penetration testing?","ما الهدف الأساسي من الاختبار الاختراقي؟"],
+  a:[["A controlled, authorized simulation of an attack to test security","محاكاة منضبطة ومصرّحة لهجوم لاختبار الأمان"],["Compromise the system and exploit its data","اختراق النظام واستغلال بياناته"],["Only review firewall logs","مراجعة سجلات الـ firewall فقط"],["Download ready-made attack tools","تنزيل أدوات هجوم جاهزة"]],
+  e:["Penetration testing and hacking are not synonymous.","الاختبار الاختراقي والهاكينج ليسا شيئاً واحداً."]},
+ {q:["What key constraint separates a penetration tester from an attacker?","ما القيد الأساسي الذي يفرّق مختبر الاختراق عن المهاجم؟"],
+  a:[["Never compromises or damages the target system","لا يخترق النظام الهدف ولا يتلفه أبداً"],["Never uses automated tools","لا يستخدم أدوات آلية أبداً"],["Never sees client data","لا يرى بيانات العميل أبداً"],["Works without a contract","يعمل بدون عقد"]],
+  e:["The tester follows a formal process rooted in project management.","المختبر يتبع عملية رسمية مبنية على إدارة المشاريع."]},
+ {q:["Which assessment is passive and focuses on compliance and documentation?","أي تقييم أمني هو سلبي (Passive) ويركز على الامتثال والتوثيق؟"],
+  a:[["Audits","التدقيق (Audits)"],["Vulnerability scans","فحص الثغرات"],["Penetration testing","الاختبار الاختراقي"],["Exploitation","الاستغلال"]],
+  e:["Audits review incident response, disaster recovery, and firewall/IDS logs.","التدقيق يراجع الاستجابة للحوادث والتعافي من الكوارث وسجلات الـ firewall والـ IDS."]},
+ {q:["What is the role of a vulnerability scan?","ما دور فحص الثغرات (Vulnerability Scan)؟"],
+  a:[["Automatically identifies known flaws (CVEs) as a baseline and helps select targets","يحدد الثغرات المعروفة (CVEs) آلياً كخط أساس ويساعد في اختيار الأهداف"],["Manually exploits flaws","يستغل الثغرات يدوياً"],["Only reviews documents","يراجع الوثائق فقط"],["Tests employee loyalty","يختبر ولاء الموظفين"]],
+  e:["It aids target selection but is not the test itself.","يساعد في اختيار الأهداف لكنه ليس الاختبار نفسه."]},
+ {q:["An unskilled person downloads existing tools and pretends to be a skilled hacker. What is this?","شخص بلا مهارة يحمّل أدوات جاهزة ويتظاهر بأنه هاكر ماهر. ماذا يُسمّى؟"],
+  a:[["Script Kiddy","Script Kiddy"],["Gray Hat","Gray Hat"],["White Hat","White Hat"],["Black Hat","Black Hat"]],
+  e:["Script kiddies deploy existing tools while masquerading as skilled.","الـ Script Kiddy ينشر أدوات موجودة ويتظاهر بالمهارة."]},
+ {q:["Which hacker usually obeys the law but occasionally crosses into black hat territory?","أي هاكر يلتزم بالقانون غالباً لكنه أحياناً يتجاوز إلى منطقة الـ Black Hat؟"],
+  a:[["Gray Hat","Gray Hat"],["White Hat","White Hat"],["Script Kiddy","Script Kiddy"],["Cracker","Cracker"]],
+  e:["Gray hats sit between ethical and malicious.","الـ Gray Hat بين الأخلاقي والخبيث."]},
+ {q:["Which methodology needs extensive discovery/footprinting and has the highest cost?","أي منهجية تحتاج اكتشافاً وfootprinting موسّعاً وتكلفتها الأعلى؟"],
+  a:[["Black Box","Black Box"],["Gray Box","Gray Box"],["White Box","White Box"],["All cost the same","كلها بنفس التكلفة"]],
+  e:["Black Box starts with minimal info (org name, URL, gateway IP).","يبدأ Black Box بمعلومات دنيا (اسم المنظمة، الرابط، IP البوابة)."]},
+ {q:["What defines a White Box test?","ما الذي يميّز اختبار White Box؟"],
+  a:[["Complete transparency, so the tester skips the scanning phase","شفافية كاملة، فيتخطى المختبر مرحلة الـ scanning"],["Mimics an attacker with no information","يحاكي مهاجماً بلا أي معلومات"],["Only an outside party can perform it","لا ينفّذه إلا طرف خارجي"],["It is the most expensive","الأعلى تكلفة"]],
+  e:["It has the lowest cost: the tester gets a full map of firewalls, IDS, and IPs.","تكلفته الأقل: يستلم المختبر خريطة كاملة للـ firewalls والـ IDS والـ IPs."]},
+ {q:["What risk is mentioned when internal staff perform a White Box test?","ما الخطر المذكور عندما ينفّذ موظفون داخليون اختبار White Box؟"],
+  a:[["Bias","الانحياز (Bias)"],["High cost","التكلفة العالية"],["Lack of information","نقص المعلومات"],["It is illegal","أنه غير قانوني"]],
+  e:["Internal staff may be biased about their own systems.","الموظفون الداخليون قد ينحازون لأنظمتهم."]},
+ {q:["Which methodology gives partial information (IPs of key servers, basic OS data)?","أي منهجية تعطي معلومات جزئية (IPs السيرفرات المهمة وبيانات OS الأساسية)؟"],
+  a:[["Gray Box","Gray Box"],["Black Box","Black Box"],["White Box","White Box"],["Audit","التدقيق"]],
+  e:["Gray Box simulates a partially informed attacker.","يحاكي Gray Box مهاجماً عنده معلومات جزئية."]},
+ {q:["What does the 'Honest Capability' (Keep in Your Lane) pillar mean?","ماذا تعني ركيزة 'الصدق في القدرات' (Keep in Your Lane)؟"],
+  a:[["Being transparent about your real skills instead of exaggerating","الشفافية بشأن مهاراتك الحقيقية بدل المبالغة"],["Keeping client data secret","إبقاء بيانات العميل سرية"],["Never disrupting systems","عدم تعطيل الأنظمة أبداً"],["Getting a certification","الحصول على شهادة"]],
+  e:["Example: admitting a lack of social engineering experience.","مثال: الاعتراف بنقص الخبرة في الهندسة الاجتماعية."]},
+ {q:["'If You Break It, You Bought It' belongs to which pillar?","ما الركيزة التي تنتمي لها عبارة 'If You Break It, You Bought It'؟"],
+  a:[["Zero-Disruption","عدم التعطيل (Zero-Disruption)"],["Absolute Confidentiality","السرية المطلقة"],["Honest Capability","الصدق في القدرات"],["Certifications","الشهادات"]],
+  e:["Roles and conditions are contracted; use backup systems for sensitive targets.","الأدوار والظروف تُحدد بالعقد، وتُستخدم أنظمة احتياطية للأهداف الحساسة."]},
+ {q:["Which U.S. law (18 U.S.C. § 1030) is the pivotal legislation protecting federal, financial, and commerce systems?","أي قانون أمريكي (18 U.S.C. § 1030) هو التشريع المحوري لحماية الأنظمة الفيدرالية والمالية والتجارية؟"],
+  a:[["CFAA","CFAA"],["Stored Communications Act","Stored Communications Act"],["Access Devices Act","Access Devices Act"],["Identity Theft Enforcement Act","Identity Theft Enforcement Act"]],
+  e:["CFAA = Computer Fraud and Abuse Act.","CFAA هو قانون الاحتيال وإساءة استخدام الحاسب."]},
+ {q:["What are the penalties under the Stored Communications Act?","ما العقوبات في Stored Communications Act؟"],
+  a:[["Up to 5 years in prison (10 for subsequent offenses)","حتى 5 سنوات سجن (10 سنوات للمخالفات اللاحقة)"],["Fine only","غرامة فقط"],["One year","سنة واحدة"],["Up to 20 years","حتى 20 سنة"]],
+  e:["It criminalizes unauthorized access to or alteration of electronic storage systems.","يجرّم الوصول غير المصرّح لأنظمة التخزين الإلكترونية أو تعديلها."]},
+ {q:["Which act criminalizes fraud using genuine or counterfeit access devices (§ 1029)?","أي قانون يجرّم الاحتيال باستخدام أجهزة وصول حقيقية أو مزوّرة (§ 1029)؟"],
+  a:[["Access Devices Act","Access Devices Act"],["CFAA","CFAA"],["Stored Communications Act","Stored Communications Act"],["EU Directive 2013/40","EU Directive 2013/40"]],
+  e:["It is 18 U.S.C. § 1029.","رقمه 18 U.S.C. § 1029."]},
+ {q:["Which country's IS Crime Law (2010) sets fines up to 1000 Dinars plus imprisonment?","قانون أي دولة (IS Crime Law 2010) يحدد غرامات حتى 1000 دينار مع السجن؟"],
+  a:[["Jordan","الأردن"],["Japan","اليابان"],["Saudi Arabia","السعودية"],["The EU","الاتحاد الأوروبي"]],
+  e:["Jordan: IS Crime Law 2010.","الأردن: IS Crime Law 2010."]},
+ {q:["Which certification has a grueling practical exam and costs about $800?","أي شهادة لها امتحان عملي شاق وتكلفتها حوالي 800 دولار؟"],
+  a:[["OSCP","OSCP"],["GPEN","GPEN"],["CISSP","CISSP"],["Mile2","Mile2"]],
+  e:["OSCP (Offensive Security) has a real-time practical hacking exam. GPEN (SANS) is about $4,000.","OSCP من Offensive Security فيها امتحان اختراق عملي. أما GPEN من SANS فحوالي 4,000 دولار."]},
+ {q:["What is the global legal takeaway of the dossier?","ما الخلاصة القانونية العالمية في الدوسية؟"],
+  a:[["Any access without permission is very likely a crime in any jurisdiction","أي وصول بدون إذن يُحتمل جداً أن يكون جريمة في أي دولة"],["Laws differ so much that hacking is allowed in some countries","القوانين تختلف لدرجة أن الاختراق مسموح في بعض الدول"],["Ethical testing needs no permission","الاختبار الأخلاقي لا يحتاج تصريحاً"],["Only the U.S. criminalizes hacking","أمريكا وحدها تجرّم الاختراق"]],
+  e:["Authorization is the line between a pentest and a crime.","التصريح هو الخط الفاصل بين الاختبار الاختراقي والجريمة."]}
+],
+c2: [
+ {q:["What is the difference between a pentest and a vulnerability assessment?","ما الفرق بين الـ pentest والـ vulnerability assessment؟"],
+  a:[["A pentest also exploits the vulnerabilities, not just discovers them","الـ pentest يستغل الثغرات أيضاً وليس فقط يكتشفها"],["A pentest does not find vulnerabilities","الـ pentest لا يجد ثغرات"],["An assessment is more dangerous","الـ assessment أخطر"],["There is no difference","لا يوجد فرق"]],
+  e:["Testers discover vulnerabilities and exploit them where possible.","المختبرون يكتشفون الثغرات ويستغلونها حيثما أمكن."]},
+ {q:["Which stage comes first?","أي مرحلة تأتي أولاً؟"],
+  a:[["Pre-engagement","التحضير (Pre-engagement)"],["Exploitation","الاستغلال"],["Reporting","التقرير"],["Threat modeling","نمذجة التهديدات"]],
+  e:["You talk to the client about goals and map out the scope.","تتحدث مع العميل عن أهدافه وتحدد النطاق."]},
+ {q:["What is the 'get out of jail free' card?","ما هي بطاقة 'get out of jail free'؟"],
+  a:[["Formal written authorization to perform the test","تصريح رسمي مكتوب بإجراء الاختبار"],["An upfront payment","دفعة مقدمة"],["An NDA","اتفاقية عدم إفصاح"],["A list of tools","قائمة بالأدوات"]],
+  e:["If the target is hosted by a third party, you need that party's approval too.","إذا كان الهدف عند طرف ثالث فتحتاج موافقته أيضاً."]},
+ {q:["Which item is NOT typically agreed in the pre-engagement phase?","أي عنصر ليس من المتفق عليه عادةً في مرحلة التحضير؟"],
+  a:[["The exploit code to be used","كود الـ exploit الذي سيُستخدم"],["Scope (IPs and hosts)","النطاق (IPs والـ hosts)"],["Testing window","نافذة الاختبار"],["Payment terms","شروط الدفع"]],
+  e:["Scope, testing window, contacts, authorization, payment terms and an NDA are agreed up front.","النطاق ونافذة الاختبار وجهات الاتصال والتصريح والدفع واتفاقية السرية تُحدد مسبقاً."]},
+ {q:["What is OSINT?","ما هو الـ OSINT؟"],
+  a:[["Intelligence gathered from legal, open sources","معلومات استخباراتية تُجمع من مصادر مفتوحة قانونية"],["Hacking internal systems","اختراق الأنظمة الداخلية"],["An exploitation tool","أداة استغلال"],["A type of report","نوع من التقارير"]],
+  e:["Such as public records and social media; the core of information gathering.","مثل السجلات العامة ووسائل التواصل، وهو جوهر مرحلة جمع المعلومات."]},
+ {q:["In which stage do you think like attackers and develop strategies based on gathered information?","في أي مرحلة تفكر كالمهاجمين وتبني استراتيجيات بناءً على المعلومات المجمّعة؟"],
+  a:[["Threat modeling","نمذجة التهديدات"],["Reporting","التقرير"],["Post exploitation","ما بعد الاستغلال"],["Pre-engagement","التحضير"]],
+  e:["Strategies are developed from the information-gathering phase.","تُبنى الاستراتيجيات من نتائج مرحلة جمع المعلومات."]},
+ {q:["Which tool is typically used in the exploitation stage?","أي أداة تُستخدم عادةً في مرحلة الاستغلال؟"],
+  a:[["Metasploit","Metasploit"],["Whois","Whois"],["Netcraft","Netcraft"],["Maltego","Maltego"]],
+  e:["Some exploits are remarkably easy, like logging in with default passwords.","بعض الاستغلالات سهلة جداً، مثل الدخول بكلمات مرور افتراضية."]},
+ {q:["What happens in post exploitation?","ماذا يحدث في مرحلة ما بعد الاستغلال؟"],
+  a:[["Gather system info, escalate privileges, and pivot to other systems","جمع معلومات عن النظام ورفع الصلاحيات والانتقال (pivot) لأنظمة أخرى"],["Collect emails","جمع الإيميلات"],["Write the contract","كتابة العقد"],["Define the scope","تحديد النطاق"]],
+  e:["E.g., dump password hashes or attack systems previously unavailable.","مثلاً استخراج password hashes أو مهاجمة أنظمة لم تكن متاحة سابقاً."]},
+ {q:["What is pivoting?","ما هو الـ Pivoting؟"],
+  a:[["Using an exploited machine to attack systems not previously reachable","استخدام جهاز مخترق لمهاجمة أنظمة لم تكن متاحة مباشرة"],["Changing a password","تغيير كلمة مرور"],["A UDP scan","فحص UDP"],["Deleting logs","حذف السجلات"]],
+  e:["The compromised machine becomes the center (pivot point) for further attacks.","الجهاز المخترق يصير مركز الانطلاق لهجمات إضافية."]},
+ {q:["Who is the audience of the executive summary?","من هو جمهور الملخص التنفيذي؟"],
+  a:[["Executives in charge of the security program","المدراء التنفيذيون المسؤولون عن برنامج الأمن"],["Network engineers only","مهندسو الشبكات فقط"],["Attackers","المهاجمون"],["Competitors","المنافسون"]],
+  e:["It includes background, overall posture, risk profile, general findings, recommendation summary, and a strategic road map.","يتضمن الخلفية والوضع العام وملف المخاطر والنتائج العامة وملخص التوصيات وخارطة الطريق."]},
+ {q:["Which technical-report section estimates the loss if vulnerabilities were exploited?","أي قسم في التقرير التقني يقدّر الخسارة لو استُغلت الثغرات؟"],
+  a:[["Risk/exposure","المخاطر / التعرّض (Risk/exposure)"],["Introduction","المقدمة"],["Conclusion","الخاتمة"],["Background","الخلفية"]],
+  e:["A quantitative description of the risk discovered.","وصف كمّي للمخاطر المكتشفة."]},
+ {q:["What does Netcraft provide?","ماذا تقدم أداة Netcraft؟"],
+  a:[["Site hosting info, underlying software, uptime logs, and anti-phishing","معلومات الاستضافة والبرمجيات وسجلات uptime وخدمات مضادة للتصيد"],["UDP port scanning","فحص منافذ UDP"],["DNS zone downloads","تنزيل DNS zones"],["Exploit execution","تنفيذ الـ exploits"]],
+  e:["Helps rule out vulnerabilities that affect only other server types.","تساعد في استبعاد ثغرات تخص أنواع سيرفرات أخرى."]},
+ {q:["With private registration, what does Whois show?","مع التسجيل الخاص (private registration)، ماذا يُظهر Whois؟"],
+  a:[["The proxy service's details (e.g., Domains By Proxy) plus the name servers","بيانات خدمة الوسيط (مثل Domains By Proxy) مع الـ name servers"],["The owner's full real details","بيانات المالك الحقيقية كاملة"],["Nothing at all","لا شيء إطلاقاً"],["Passwords","كلمات المرور"]],
+  e:["Personal details are hidden, but the domain servers remain visible.","التفاصيل الشخصية مخفية لكن الـ domain servers تبقى ظاهرة."]},
+ {q:["How do you find a domain's mail servers with nslookup?","كيف تجد سيرفرات البريد لدومين باستخدام nslookup؟"],
+  a:[["set type=mx","set type=mx"],["set type=ns","set type=ns"],["-sV","-sV"],["-oA","-oA"]],
+  e:["MX records are the DNS records for email.","سجلات MX هي سجلات الـ DNS الخاصة بالبريد."]},
+ {q:["Which command performs a DNS zone transfer?","أي أمر ينفّذ DNS zone transfer؟"],
+  a:[["host -l domain nameserver","host -l domain nameserver"],["host -t ns domain","host -t ns domain"],["nmap -sU","nmap -sU"],["nikto -h","nikto -h"]],
+  e:["-l transfers the zone; -t ns only lists name servers.","الخيار -l ينقل الـ zone، بينما -t ns يعرض الـ name servers فقط."]},
+ {q:["Why is an insecure zone transfer dangerous?","لماذا يُعدّ الـ zone transfer غير الآمن خطيراً؟"],
+  a:[["Anyone can download all DNS records and learn where to start attacking","أي شخص يستطيع تنزيل كل سجلات الـ DNS ومعرفة من أين يبدأ الهجوم"],["It shuts down the website","يوقف الموقع"],["It deletes email","يحذف البريد"],["It changes passwords","يغيّر كلمات المرور"]],
+  e:["E.g., mail2 is probably a mail server, so check ports 25 and 110.","مثلاً mail2 غالباً سيرفر بريد فنفحص المنفذين 25 و110."]},
+ {q:["What is theHarvester used for?","فيمَ تُستخدم theHarvester؟"],
+  a:[["Finding emails and hosts via search engines and public sources","إيجاد الإيميلات والـ hosts عبر محركات البحث والمصادر العامة"],["Scanning web apps","فحص تطبيقات الويب"],["Cracking passwords","كسر كلمات المرور"],["Exploiting SMB","استغلال SMB"]],
+  e:["It searches Google, Bing, PGP, LinkedIn and more.","تبحث في Google وBing وPGP وLinkedIn وغيرها."]},
+ {q:["Why is reconnaissance with Maltego legal?","لماذا يُعد الاستطلاع بـ Maltego قانونياً؟"],
+  a:[["It uses information publicly available on the Internet","لأنه يستخدم معلومات متاحة للعموم على الإنترنت"],["It leaves no trace","لأنه لا يترك أثراً"],["It is a paid tool","لأنه أداة مدفوعة"],["It needs special permission","لأنه يحتاج إذناً خاصاً"]],
+  e:["Maltego is a data-mining tool that visualizes OSINT.","Maltego أداة data-mining تعرض الـ OSINT بشكل مرئي."]},
+ {q:["Which Nmap scan is called 'stealthy' because it never completes the handshake?","أي فحص Nmap يُسمّى 'خفياً' لأنه لا يكمل الـ handshake؟"],
+  a:[["nmap -sS (SYN scan)","nmap -sS (فحص SYN)"],["nmap -sV","nmap -sV"],["nmap -sU","nmap -sU"],["nmap -sC","nmap -sC"]],
+  e:["It sends SYN, waits for SYN-ACK, and never sends the ACK.","يرسل SYN وينتظر SYN-ACK ولا يرسل ACK أبداً."]},
+ {q:["What does nmap -sV do?","ماذا يفعل الأمر nmap -sV؟"],
+  a:[["Completes the connection and identifies software and version (banner grabbing)","يكمل الاتصال ويحدد البرنامج ونسخته (banner grabbing)"],["Scans UDP only","يفحص UDP فقط"],["Saves results","يحفظ النتائج"],["Runs scripts","يشغّل سكربتات"]],
+  e:["It gives more detail, e.g., vsftpd 2.3.4 on the FTP server.","يعطي تفاصيل أكثر، مثل vsftpd 2.3.4 على سيرفر الـ FTP."]},
+ {q:["In a UDP scan, what does an ICMP Port Unreachable message mean?","في فحص UDP، ماذا تعني رسالة ICMP Port Unreachable؟"],
+  a:[["The port is closed","المنفذ مغلق"],["The port is open","المنفذ مفتوح"],["The port is only filtered","المنفذ مفلتر فقط"],["The command failed","فشل الأمر"]],
+  e:["No response at all means open or filtered, so Nmap can't always distinguish.","عدم وصول أي رد يعني مفتوح أو مفلتر، فلا يستطيع Nmap التمييز دائماً."]},
+ {q:["How many ports does Nmap scan by default, and what is the pentest rule of thumb?","كم منفذاً يفحص Nmap افتراضياً، وما القاعدة العملية في الـ pentest؟"],
+  a:[["The top 1,000; scan ports 1–65535","أهم 1,000؛ والقاعدة فحص 1–65535"],["All 65,535; scan only the top 1,000","كل الـ 65,535؛ والقاعدة فحص أهم 1,000 فقط"],["100 ports","100 منفذ"],["Port 80 only","المنفذ 80 فقط"]],
+  e:["The default scan can miss a port or two.","الفحص الافتراضي قد يفوّت منفذاً أو اثنين."]},
+ {q:["What does the -oA option do in Nmap?","ماذا يفعل الخيار -oA في Nmap؟"],
+  a:[["Saves results in all formats (.nmap, .gnmap, .xml)","يحفظ النتائج بكل الصيغ (.nmap, .gnmap, .xml)"],["Scans all ports","يفحص كل المنافذ"],["Detects versions","يكتشف النسخ"],["Runs scripts","يشغّل سكربتات"]],
+  e:[".gnmap is the greppable Nmap format.",".gnmap هي صيغة Nmap القابلة للبحث بـ grep."]},
+ {q:["How many IP addresses is Nessus Home limited to?","كم عنوان IP تقتصر عليه نسخة Nessus Home؟"],
+  a:[["16","16"],["256","256"],["1024","1024"],["Unlimited","غير محدود"]],
+  e:["The paid professional version is for pentesters and in-house security teams.","النسخة الاحترافية المدفوعة موجهة للمختبرين وفرق الأمن الداخلية."]},
+ {q:["What are Nessus policies?","ما هي الـ Policies في Nessus؟"],
+  a:[["Configuration files that tell Nessus which checks and port scanners to run","ملفات إعداد تحدد الفحوصات والـ port scanners التي يشغّلها Nessus"],["Final reports","التقارير النهائية"],["Exploit tools","أدوات استغلال"],["Default passwords","كلمات مرور افتراضية"]],
+  e:["They configure the vulnerability scan.","هي التي تضبط عملية فحص الثغرات."]},
+ {q:["What does nmap -sC do?","ماذا يفعل الأمر nmap -sC؟"],
+  a:[["Runs the default-category NSE scripts alongside port scanning","يشغّل سكربتات NSE من الفئة الافتراضية مع فحص المنافذ"],["Cracks passwords","يكسر كلمات المرور"],["Performs a zone transfer","ينفّذ zone transfer"],["Scans UDP","يفحص UDP"]],
+  e:["It revealed, e.g., that SMTP allows VRFY.","كشف مثلاً أن SMTP يسمح بالأمر VRFY."]},
+ {q:["Why is the SMTP VRFY command interesting to an attacker?","لماذا يهم المهاجم أمر VRFY في SMTP؟"],
+  a:[["It confirms whether a username exists, making credential guessing more likely to succeed","يؤكد وجود اسم مستخدم، فيزيد نجاح تخمين بيانات الدخول"],["It deletes messages","يحذف الرسائل"],["It encrypts the connection","يشفّر الاتصال"],["It changes the port","يغيّر المنفذ"]],
+  e:["A valid username makes credential-guessing attacks much more likely to succeed.","اسم المستخدم الصحيح يجعل هجمات تخمين بيانات الدخول أكثر نجاحاً بكثير."]},
+ {q:["The nfs-ls script finds a writable .ssh directory. What is the impact?","سكربت nfs-ls وجد مجلد .ssh قابلاً للكتابة. ما الأثر؟"],
+  a:[["Add your SSH key to authorized keys and log in remotely","إضافة مفتاح SSH الخاص بك إلى authorized keys وتسجيل الدخول عن بعد"],["No impact","لا أثر"],["Only deletes files","حذف ملفات فقط"],["Disables the service","تعطيل الخدمة"]],
+  e:["A seemingly minor access-control mistake becomes remote command execution.","خطأ بسيط في التحكم بالوصول يتحول إلى تنفيذ أوامر عن بعد."]},
+ {q:["What is Nikto?","ما هو Nikto؟"],
+  a:[["A web application vulnerability scanner built into Kali","ماسح ثغرات تطبيقات ويب مدمج في Kali"],["A UDP port scanner","ماسح منافذ UDP"],["A zone transfer tool","أداة zone transfer"],["A reporting system","نظام تقارير"]],
+  e:["It looks for dangerous files, outdated versions, and misconfigurations: nikto -h host.","يبحث عن ملفات خطرة ونسخ قديمة وإعدادات خاطئة: nikto -h host."]},
+ {q:["Which vulnerability analysis methods does the chapter list?","ما طرق تحليل الثغرات التي يذكرها الشابتر؟"],
+  a:[["Automated scanning, targeted analysis, manual research","الفحص الآلي، والتحليل الموجّه، والبحث اليدوي"],["SYN, UDP, version","SYN وUDP والنسخة"],["Whois, nslookup, host","Whois وnslookup وhost"],["Reporting only","التقرير فقط"]],
+  e:["Manual vulnerability research is the better way to improve your practice.","البحث اليدوي عن الثغرات هو الطريقة الأفضل لتطوير ممارستك."]}
+]};
+
+/* ---------- helpers ---------- */
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const L=["A","B","C","D"];
+const bi=p=>`${p[0]}<i class="ar">${p[1]}</i>`;
+
+/* ---------- quiz engine ---------- */
+function makeQuiz(mount,key,pool,count){
+  const el=document.getElementById(mount);
+  let qs,i,score,wrong,locked;
+  function prep(o){return {q:o.q,e:o.e,correct:o.a[0],a:shuffle(o.a)}}
+  function start(list){qs=shuffle(list).slice(0,count||list.length).map(prep);i=0;score=0;wrong=[];locked=false;render()}
+  function render(){
+    if(i>=qs.length)return done();
+    const q=qs[i];
+    el.innerHTML=`<div class="quiz"><div class="qhead"><span>Question ${i+1} / ${qs.length} · سؤال</span><span>Correct: ${score} · الصحيح</span></div>
+      <div class="bar"><span style="width:${(i/qs.length)*100}%"></span></div>
+      <p class="qtext">${bi(q.q)}</p><div class="opts">${q.a.map((t,n)=>`<button class="opt" data-n="${n}"><span class="l">${L[n]}</span><span class="t">${bi(t)}</span></button>`).join("")}</div><div id="fb-${mount}"></div></div>`;
+    locked=false;
+    el.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(+b.dataset.n));
+  }
+  function pick(n){
+    if(locked)return;locked=true;
+    const q=qs[i],ok=q.a[n]===q.correct;
+    el.querySelectorAll(".opt").forEach((b,m)=>{b.disabled=true;if(q.a[m]===q.correct)b.classList.add("right");else if(m===n)b.classList.add("wrong")});
+    if(ok)score++;else wrong.push(q);
+    const last=i===qs.length-1;
+    document.getElementById("fb-"+mount).innerHTML=`<div class="why ${ok?"good":"bad"}"><b>${ok?'Correct!<i class="ar">صح عليك!</i>':'Not quite.<i class="ar">مو صحيح.</i>'}</b>${bi(q.e)}</div>
+      <div class="row"><button class="btn" id="nx-${mount}">${last?'See result<i class="ar">شوف النتيجة</i>':'Next question<i class="ar">السؤال التالي</i>'}</button></div>`;
+    const nx=document.getElementById("nx-"+mount);nx.onclick=()=>{i++;render()};nx.focus({preventScroll:true});
+  }
+  function done(){
+    const pct=Math.round(score/qs.length*100);
+    const prev=+store.get("best-"+key)||0;
+    if(pct>prev)store.set("best-"+key,pct);
+    showBest();
+    const msg=pct>=90?['Excellent! You are ready.','ممتاز! أنت جاهز.']:pct>=70?['Good. Review your mistakes and aim for 100%.','زين، راجع أخطاءك وتصير ١٠٠٪.']:['Review the summary above, then try again.','راجع الملخص فوق ثم أعد المحاولة.'];
+    el.innerHTML=`<div class="quiz"><div class="score">${score}<small> / ${qs.length}</small></div><p>${bi(msg)}</p>
+      ${wrong.length?`<h3>Questions you missed<i class="ar">الأسئلة التي أخطأت فيها</i></h3><ul class="rev">${wrong.map(w=>`<li>${bi(w.q)}<span><b>Answer · الجواب:</b> ${bi(w.correct)}${bi(w.e)}</span></li>`).join("")}</ul>`:""}
+      <div class="row"><button class="btn" id="again-${mount}">Retake<i class="ar">أعد الاختبار</i></button>${wrong.length?`<button class="btn alt" id="redo-${mount}">Retry mistakes only<i class="ar">أعد الأخطاء فقط</i></button>`:""}</div></div>`;
+    document.getElementById("again-"+mount).onclick=()=>start(pool());
+    const r=document.getElementById("redo-"+mount);
+    if(r)r.onclick=()=>{const w=wrong.map(x=>({q:x.q,e:x.e,a:[x.correct,...x.a.filter(y=>y!==x.correct)]}));qs=w.map(prep);i=0;score=0;wrong=[];locked=false;render()};
+  }
+  start(pool());
+}
+function showBest(){
+  [["c1","best-c1"],["c2","best-c2"]].forEach(([k,id])=>{const v=store.get("best-"+k);const e=document.getElementById(id);if(e&&v)e.innerHTML="Best: <b>"+v+"%</b> · أفضل نتيجة"});
+}
+
+/* ---------- stages ---------- */
+const STAGES=[
+ {n:"Pre-engagement",t:["Pre-engagement phase","مرحلة التحضير"],b:[
+  ["Talk to the client about the goals of the pentest and map out the scope.","التحدث مع العميل عن أهداف الاختبار وتحديد النطاق (scope)."],
+  ["Agree on scope (IP addresses and hosts) and the testing window (specific hours or days).","الاتفاق على النطاق (عناوين IP والـ hosts) ونافذة الاختبار (ساعات أو أيام محددة)."],
+  ["Client contact information and payment terms.","معلومات التواصل مع العميل وشروط الدفع."],
+  ["A \"get out of jail free\" card: written authorization, plus third-party approval if the target is hosted elsewhere.","بطاقة \"get out of jail free\": تصريح مكتوب، مع موافقة الطرف الثالث إذا كان الهدف مستضافاً عنده."],
+  ["Include a nondisclosure agreement (NDA) clause in the contract.","إضافة بند عدم إفصاح (NDA) في العقد."]]},
+ {n:"Information gathering",t:["Information gathering","جمع المعلومات"],b:[
+  ["Analyze freely available sources of information (OSINT).","تحليل مصادر المعلومات المتاحة مجاناً (OSINT)."],
+  ["Learn what systems are out there on the Internet or internal network and what software is running.","معرفة الأنظمة الموجودة على الإنترنت أو الشبكة الداخلية والبرمجيات التي تعمل عليها."],
+  ["Tools: Netcraft, Whois, nslookup, theHarvester, Maltego, Nmap.","الأدوات: Netcraft وWhois وnslookup وtheHarvester وMaltego وNmap."]]},
+ {n:"Threat modeling",t:["Threat modeling","نمذجة التهديدات"],b:[
+  ["Think like attackers.","التفكير كالمهاجمين."],
+  ["Develop strategies to penetrate the client's system, e.g., if the goal were to give confidential information to competitors.","وضع استراتيجيات لاختراق نظام العميل، مثلاً لو كان الهدف تسريب معلومات سرية للمنافسين."],
+  ["Strategies are based on the information-gathering phase.","تُبنى الاستراتيجيات على نتائج مرحلة جمع المعلومات."]]},
+ {n:"Vulnerability analysis",t:["Vulnerability analysis","تحليل الثغرات"],b:[
+  ["Actively discover vulnerabilities to determine how successful exploit strategies might be.","اكتشاف الثغرات بشكل فعّال لتحديد مدى نجاح استراتيجيات الاستغلال."],
+  ["Run vulnerability scanners that use databases and active checks to make a best guess at which vulnerabilities are present.","تشغيل ماسحات الثغرات التي تستخدم قواعد بيانات وفحوصات نشطة لتخمين الثغرات الموجودة."],
+  ["Also do manual analysis and verify results on your own.","وأيضاً إجراء تحليل يدوي والتحقق من النتائج بنفسك."]]},
+ {n:"Exploitation",t:["Exploitation","الاستغلال"],b:[
+  ["Run exploits against the vulnerabilities with a tool like Metasploit.","تشغيل exploits ضد الثغرات بأداة مثل Metasploit."],
+  ["Some vulnerabilities are remarkably easy to exploit, such as logging in with default passwords.","بعض الثغرات سهلة الاستغلال جداً، مثل الدخول بكلمات مرور افتراضية."]]},
+ {n:"Post exploitation",t:["Post exploitation","ما بعد الاستغلال"],b:[
+  ["Gather information about the attacked system and look for interesting files.","جمع معلومات عن النظام المخترق والبحث عن ملفات مهمة."],
+  ["Elevate privileges (raise the privileges) where necessary.","رفع الصلاحيات (privilege escalation) عند الحاجة."],
+  ["Dump password hashes to reverse them or use them to access additional systems.","استخراج password hashes لفكها أو استخدامها للوصول إلى أنظمة إضافية."],
+  ["Pivot: use the exploited machine as a base to attack systems not previously available.","الـ Pivoting: استخدام الجهاز المخترق كقاعدة لمهاجمة أنظمة لم تكن متاحة."]]},
+ {n:"Reporting",t:["Reporting","كتابة التقرير"],b:[
+  ["Convey findings to the customer in a meaningful way: security lapses and how to fix them.","إيصال النتائج للعميل بطريقة مفيدة: الثغرات الأمنية وكيفية إصلاحها."],
+  ["Include both an executive summary and a technical report.","يتضمن ملخصاً تنفيذياً وتقريراً تقنياً."]]}
+];
+function buildStages(){
+  const box=document.getElementById("stages"),p=document.getElementById("stagepanel");
+  function sel(k){
+    box.querySelectorAll(".st").forEach((b,n)=>b.setAttribute("aria-selected",n===k));
+    const s=STAGES[k];p.innerHTML=`<h3>${k+1}. ${bi(s.t)}</h3><ul>${s.b.map(x=>`<li>${bi(x)}</li>`).join("")}</ul>`;
+  }
+  box.innerHTML=STAGES.map((s,k)=>`<button class="st" role="tab"><i>${k+1}</i>${s.n}</button>`).join("");
+  box.querySelectorAll(".st").forEach((b,k)=>b.onclick=()=>sel(k));
+  sel(0);
+}
+
+/* ---------- tabs ---------- */
+const VIEWS=["ch1","ch2","exam"];
+function show(t,push){
+  if(!VIEWS.includes(t))t="ch1";
+  VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==t;document.getElementById("tab-"+v).setAttribute("aria-selected",v===t)});
+  if(push!==false){try{history.replaceState(null,"","#"+t)}catch(e){}}
+  window.scrollTo(0,0);
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>show(b.dataset.t));
+buildStages();
+makeQuiz("quiz-c1","c1",()=>Q.c1);
+makeQuiz("quiz-c2","c2",()=>Q.c2);
+makeQuiz("quiz-exam","exam",()=>Q.c1.concat(Q.c2),15);
+showBest();
+show((location.hash||"#ch1").slice(1),false);
+</script>
+</body>
+</html>
