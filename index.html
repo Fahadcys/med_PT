@@ -129,6 +129,7 @@ td:first-child{font-weight:600;color:var(--ink)}
     <button class="tab" role="tab" data-t="ch2" id="tab-ch2">Chapter 2: Pen Test Primer<i class="ar">الشابتر ٢</i></button>
     <button class="tab" role="tab" data-t="ch3" id="tab-ch3">Chapter 3: Scanning<i class="ar">الشابتر ٣</i></button>
     <button class="tab" role="tab" data-t="ch4" id="tab-ch4">Chapter 4: Malware &amp; Rootkits<i class="ar">الشابتر ٤</i></button>
+    <button class="tab" role="tab" data-t="mid" id="tab-mid">Midterm Questions<i class="ar">أسئلة الميد السابق</i></button>
     <button class="tab" role="tab" data-t="exam" id="tab-exam">Final Exam<i class="ar">الاختبار الشامل</i></button>
   </nav>
 </div></header>
@@ -804,6 +805,7 @@ td:first-child{font-weight:600;color:var(--ink)}
 </div>
 
 <!-- ============ EXAM ============ -->
+<div id="v-mid" hidden><div class="hero"><div class="tag">PREVIOUS MIDTERM · MULTIPLE CHOICE</div><h1>Previous Midterm Questions<i class="ar">أسئلة ميد الاختراقات السابق</i></h1><p>Original multiple-choice questions and converted written questions, with Arabic translations and explanations.<i class="ar">أسئلة الخيارات الأصلية والأسئلة المقالية المحوّلة إلى خيارات مع ترجمة وشرح.</i></p><div class="meta"><span class="chip"><b>22</b> questions · سؤال</span><span class="chip" id="best-mid">Best: — · أفضل نتيجة</span></div></div><div class="cols" style="grid-template-columns:minmax(0,1fr)"><div id="quiz-mid"></div></div></div>
 <div id="v-exam" hidden>
   <div class="hero">
     <div class="tag">FINAL REVIEW</div>
@@ -1199,6 +1201,626 @@ c4: [
 };
 
 /* ---------- helpers ---------- */
+
+Q.mid = [
+  {
+    "q": [
+      "Which statement about vulnerabilities is NOT correct?",
+      "أي عبارة عن الثغرات غير صحيحة؟"
+    ],
+    "a": [
+      [
+        "A vulnerability is a flaw that increases security",
+        "الثغرة خلل يزيد الأمان"
+      ],
+      [
+        "A vulnerability can allow security to be breached",
+        "الثغرة قد تسمح باختراق الأمان"
+      ],
+      [
+        "A vulnerability may be a software bug",
+        "قد تكون الثغرة خطأ برمجياً"
+      ],
+      [
+        "A vulnerability may affect system security",
+        "قد تؤثر الثغرة على أمن النظام"
+      ]
+    ],
+    "e": [
+      "A vulnerability weakens rather than increases security.",
+      "الثغرة تضعف الأمان ولا تزيده."
+    ]
+  },
+  {
+    "q": [
+      "Missing Windows patches and service packs indicate what?",
+      "على ماذا يدل نقص تحديثات ويندوز؟"
+    ],
+    "a": [
+      [
+        "A vulnerability in Windows",
+        "وجود ثغرة في ويندوز"
+      ],
+      [
+        "An intrusion detection system",
+        "نظام كشف التسلل"
+      ],
+      [
+        "A honeypot",
+        "مصيدة إلكترونية"
+      ],
+      [
+        "A security feature",
+        "ميزة أمنية"
+      ]
+    ],
+    "e": [
+      "Missing patches can leave known vulnerabilities unaddressed.",
+      "غياب التحديثات قد يترك ثغرات معروفة."
+    ]
+  },
+  {
+    "q": [
+      "In which phase is OSINT primarily used?",
+      "في أي مرحلة نستخدم OSINT أساساً؟"
+    ],
+    "a": [
+      [
+        "Information gathering",
+        "جمع المعلومات"
+      ],
+      [
+        "Threat modeling",
+        "نمذجة التهديدات"
+      ],
+      [
+        "Pre-engagement",
+        "التحضير"
+      ],
+      [
+        "Audit",
+        "التدقيق"
+      ]
+    ],
+    "e": [
+      "OSINT collects publicly available information.",
+      "OSINT يجمع معلومات من مصادر علنية."
+    ]
+  },
+  {
+    "q": [
+      "What does host -t ns domain display?",
+      "ماذا يعرض الأمر host -t ns domain؟"
+    ],
+    "a": [
+      [
+        "DNS name-server records",
+        "سجلات خوادم الأسماء DNS"
+      ],
+      [
+        "Open TCP ports",
+        "منافذ TCP المفتوحة"
+      ],
+      [
+        "Operating system version",
+        "إصدار نظام التشغيل"
+      ],
+      [
+        "Running processes",
+        "العمليات الجارية"
+      ]
+    ],
+    "e": [
+      "The -t ns option requests NS records.",
+      "الخيار -t ns يطلب سجلات NS."
+    ]
+  },
+  {
+    "q": [
+      "Which Nmap command performs OS detection, a TCP connect scan, and sneaky timing against 192.168.1.1?",
+      "أي أمر Nmap يفحص نظام التشغيل وTCP connect بتوقيت sneaky؟"
+    ],
+    "a": [
+      [
+        "nmap -O -sT -T1 192.168.1.1",
+        "nmap -O -sT -T1 192.168.1.1"
+      ],
+      [
+        "nmap -sU -T5 192.168.1.1",
+        "nmap -sU -T5 192.168.1.1"
+      ],
+      [
+        "nmap -sV -T4 192.168.1.1",
+        "nmap -sV -T4 192.168.1.1"
+      ],
+      [
+        "nmap -Pn -sU 192.168.1.1",
+        "nmap -Pn -sU 192.168.1.1"
+      ]
+    ],
+    "e": [
+      "-O detects OS, -sT uses TCP connect, and -T1 is sneaky timing.",
+      "-O للنظام و-sT لفحص TCP و-T1 توقيت sneaky."
+    ]
+  },
+  {
+    "q": [
+      "What is the main goal of penetration testing?",
+      "ما الهدف الأساسي من اختبار الاختراق؟"
+    ],
+    "a": [
+      [
+        "Find and validate security weaknesses with authorization",
+        "اكتشاف نقاط الضعف والتحقق منها بتصريح"
+      ],
+      [
+        "Steal user data",
+        "سرقة بيانات المستخدمين"
+      ],
+      [
+        "Disrupt production services",
+        "تعطيل الخدمات"
+      ],
+      [
+        "Avoid documenting findings",
+        "عدم توثيق النتائج"
+      ]
+    ],
+    "e": [
+      "A pentest is an authorized security assessment.",
+      "اختبار الاختراق تقييم أمني مصرح به."
+    ]
+  },
+  {
+    "q": [
+      "Which is an ethical requirement in penetration testing?",
+      "ما أحد المتطلبات الأخلاقية في اختبار الاختراق؟"
+    ],
+    "a": [
+      [
+        "Written permission and confidentiality",
+        "تصريح مكتوب وحماية السرية"
+      ],
+      [
+        "Testing any target without consent",
+        "فحص أي هدف بلا موافقة"
+      ],
+      [
+        "Publishing customer secrets",
+        "نشر أسرار العميل"
+      ],
+      [
+        "Ignoring the agreed scope",
+        "تجاهل نطاق الاختبار"
+      ]
+    ],
+    "e": [
+      "Stay within the authorized scope and protect client data.",
+      "التزم بالنطاق المصرح واحم بيانات العميل."
+    ]
+  },
+  {
+    "q": [
+      "What does CVE stand for?",
+      "ما معنى CVE؟"
+    ],
+    "a": [
+      [
+        "Common Vulnerabilities and Exposures",
+        "الثغرات والتعرضات الشائعة"
+      ],
+      [
+        "Cyber Verification Engine",
+        "محرك التحقق السيبراني"
+      ],
+      [
+        "Common Virus Exploits",
+        "استغلالات الفيروسات الشائعة"
+      ],
+      [
+        "Computer Vulnerability Encryption",
+        "تشفير ثغرات الحاسب"
+      ]
+    ],
+    "e": [
+      "CVE provides identifiers for publicly known vulnerabilities.",
+      "CVE يوفر معرفات للثغرات المعروفة علناً."
+    ]
+  },
+  {
+    "q": [
+      "Who assigns CVE identifiers under the CVE Program?",
+      "من يمنح معرفات CVE ضمن البرنامج؟"
+    ],
+    "a": [
+      [
+        "CVE Numbering Authorities (CNAs)",
+        "جهات ترقيم CVE"
+      ],
+      [
+        "Every Nmap user",
+        "كل مستخدم Nmap"
+      ],
+      [
+        "Only antivirus vendors",
+        "شركات مكافحة الفيروسات فقط"
+      ],
+      [
+        "Internet service providers",
+        "مزودو الإنترنت"
+      ]
+    ],
+    "e": [
+      "Authorized CNAs assign CVE IDs.",
+      "جهات CNA المعتمدة تمنح المعرفات."
+    ]
+  },
+  {
+    "q": [
+      "Which statement best describes Black Box testing?",
+      "ما الوصف الأفضل لاختبار Black Box؟"
+    ],
+    "a": [
+      [
+        "The tester receives little or no internal information",
+        "يحصل المختبر على معلومات داخلية قليلة أو معدومة"
+      ],
+      [
+        "The tester receives complete source code",
+        "يحصل على الشفرة كاملة"
+      ],
+      [
+        "The tester has full network diagrams",
+        "يحصل على مخططات الشبكة كاملة"
+      ],
+      [
+        "The tester only checks backups",
+        "يفحص النسخ الاحتياطية فقط"
+      ]
+    ],
+    "e": [
+      "Black Box simulates a largely uninformed outsider.",
+      "يحاكي مهاجماً خارجياً قليل المعلومات."
+    ]
+  },
+  {
+    "q": [
+      "Which statement best describes White Box testing?",
+      "ما الوصف الأفضل لاختبار White Box؟"
+    ],
+    "a": [
+      [
+        "The tester has extensive internal knowledge",
+        "لدى المختبر معرفة داخلية واسعة"
+      ],
+      [
+        "The tester has no system details",
+        "ليس لديه تفاصيل"
+      ],
+      [
+        "Only public records may be used",
+        "يستخدم المصادر العامة فقط"
+      ],
+      [
+        "No authorization is needed",
+        "لا يحتاج تصريحاً"
+      ]
+    ],
+    "e": [
+      "White Box provides detailed access to system information.",
+      "White Box يوفر معلومات تفصيلية عن النظام."
+    ]
+  },
+  {
+    "q": [
+      "What does Grey Box testing mean?",
+      "ما معنى Grey Box؟"
+    ],
+    "a": [
+      [
+        "The tester has partial internal information",
+        "لدى المختبر معلومات داخلية جزئية"
+      ],
+      [
+        "The tester has no information",
+        "لا يملك معلومات"
+      ],
+      [
+        "The tester has all information",
+        "يملك كل المعلومات"
+      ],
+      [
+        "The tester cannot scan networks",
+        "لا يستطيع فحص الشبكات"
+      ]
+    ],
+    "e": [
+      "Grey Box falls between Black and White Box.",
+      "Grey Box بين Black وWhite Box."
+    ]
+  },
+  {
+    "q": [
+      "What should be agreed upon during pre-engagement?",
+      "ما الذي يجب الاتفاق عليه في مرحلة التحضير؟"
+    ],
+    "a": [
+      [
+        "Scope, objectives, schedule, contacts and authorization",
+        "النطاق والأهداف والوقت والتواصل والتصريح"
+      ],
+      [
+        "Only the target password",
+        "كلمة مرور الهدف فقط"
+      ],
+      [
+        "Only the report font",
+        "خط التقرير فقط"
+      ],
+      [
+        "Only the scan speed",
+        "سرعة الفحص فقط"
+      ]
+    ],
+    "e": [
+      "Pre-engagement establishes rules and permissions.",
+      "مرحلة التحضير تحدد القواعد والتصاريح."
+    ]
+  },
+  {
+    "q": [
+      "What does nmap -sV do?",
+      "ماذا يفعل nmap -sV؟"
+    ],
+    "a": [
+      [
+        "Detects service versions on scanned ports",
+        "يحدد إصدارات الخدمات في المنافذ"
+      ],
+      [
+        "Detects only the OS",
+        "يحدد النظام فقط"
+      ],
+      [
+        "Deletes malware",
+        "يحذف البرمجيات الخبيثة"
+      ],
+      [
+        "Changes firewall rules",
+        "يغير قواعد الجدار الناري"
+      ]
+    ],
+    "e": [
+      "-sV probes services to identify software and versions.",
+      "-sV يفحص الخدمات لمعرفة البرنامج وإصداره."
+    ]
+  },
+  {
+    "q": [
+      "What does 21/tcp open ftp indicate in Nmap output?",
+      "ماذا تعني 21/tcp open ftp في نتائج Nmap؟"
+    ],
+    "a": [
+      [
+        "TCP port 21 is open and an FTP service is detected",
+        "منفذ TCP رقم 21 مفتوح وخدمة FTP مكتشفة"
+      ],
+      [
+        "Port 21 is closed",
+        "المنفذ مغلق"
+      ],
+      [
+        "The system is certainly compromised",
+        "النظام مخترق بالتأكيد"
+      ],
+      [
+        "FTP is encrypted by default",
+        "FTP مشفر افتراضياً"
+      ]
+    ],
+    "e": [
+      "An open service is not proof of compromise.",
+      "وجود خدمة مفتوحة لا يثبت حدوث اختراق."
+    ]
+  },
+  {
+    "q": [
+      "What is a sound conclusion when Nmap shows an old-looking service version?",
+      "ما الاستنتاج الصحيح عند ظهور إصدار خدمة يبدو قديماً؟"
+    ],
+    "a": [
+      [
+        "Check vendor advisories and CVEs before concluding it is vulnerable",
+        "تحقق من نشرات الشركة وCVE قبل الحكم بوجود ثغرة"
+      ],
+      [
+        "It is automatically infected",
+        "مصاب تلقائياً"
+      ],
+      [
+        "All ports are exploitable",
+        "كل المنافذ قابلة للاستغلال"
+      ],
+      [
+        "Nmap has patched it",
+        "Nmap حدثه"
+      ]
+    ],
+    "e": [
+      "Version output is a clue, not definitive vulnerability proof.",
+      "الإصدار مؤشر وليس دليلاً قاطعاً على الثغرة."
+    ]
+  },
+  {
+    "q": [
+      "Which command scans service versions on 192.168.20.10 through 192.168.20.12 and saves all output formats?",
+      "أي أمر يفحص إصدارات الخدمات للعناوين 10 إلى 12 ويحفظ جميع الصيغ؟"
+    ],
+    "a": [
+      [
+        "nmap -sV 192.168.20.10-12 -oA book",
+        "nmap -sV 192.168.20.10-12 -oA book"
+      ],
+      [
+        "nmap -sU 192.168.20.10 -oN book",
+        "nmap -sU 192.168.20.10 -oN book"
+      ],
+      [
+        "nmap -O 192.168.20.12",
+        "nmap -O 192.168.20.12"
+      ],
+      [
+        "nmap -sn 192.168.20.10-12",
+        "nmap -sn 192.168.20.10-12"
+      ]
+    ],
+    "e": [
+      "-sV checks versions; -oA saves normal, grepable, and XML output.",
+      "-sV للإصدارات و-oA لحفظ صيغ النتائج."
+    ]
+  },
+  {
+    "q": [
+      "What is prepending malware?",
+      "ما معنى Prepending Malware؟"
+    ],
+    "a": [
+      [
+        "Malicious code is placed at the beginning of the host file",
+        "وضع الكود الخبيث في بداية الملف"
+      ],
+      [
+        "Malicious code is placed at the end",
+        "وضعه في النهاية"
+      ],
+      [
+        "Code is inserted in unused gaps",
+        "وضعه في الفراغات"
+      ],
+      [
+        "The host file is deleted",
+        "حذف الملف"
+      ]
+    ],
+    "e": [
+      "Prepending adds malicious code before the original content.",
+      "Prepending يضيف الكود قبل المحتوى الأصلي."
+    ]
+  },
+  {
+    "q": [
+      "What is appending malware?",
+      "ما معنى Appending Malware؟"
+    ],
+    "a": [
+      [
+        "Malicious code is attached at the end of the host file",
+        "إلحاق الكود الخبيث بنهاية الملف"
+      ],
+      [
+        "Code is placed at the beginning",
+        "وضعه في البداية"
+      ],
+      [
+        "Code is placed in free gaps",
+        "وضعه في الفراغات"
+      ],
+      [
+        "No host file is involved",
+        "لا يوجد ملف مضيف"
+      ]
+    ],
+    "e": [
+      "Appending adds malicious code after the host content.",
+      "Appending يضيف الكود بعد محتوى الملف."
+    ]
+  },
+  {
+    "q": [
+      "What is cavity malware?",
+      "ما معنى Cavity Malware؟"
+    ],
+    "a": [
+      [
+        "Malicious code occupies unused space inside the host file",
+        "الكود الخبيث يشغل فراغات غير مستخدمة داخل الملف"
+      ],
+      [
+        "It only infects network routers",
+        "يصيب الموجهات فقط"
+      ],
+      [
+        "It always overwrites the whole file",
+        "يستبدل الملف بالكامل"
+      ],
+      [
+        "It attaches only to the end",
+        "يلتصق بالنهاية فقط"
+      ]
+    ],
+    "e": [
+      "Cavity infection uses gaps within an executable.",
+      "عدوى Cavity تستخدم الفراغات داخل الملف التنفيذي."
+    ]
+  },
+  {
+    "q": [
+      "How can worms propagate?",
+      "كيف تنتشر الديدان؟"
+    ],
+    "a": [
+      [
+        "By self-replicating through networks and exploiting vulnerable services",
+        "تنسخ نفسها عبر الشبكات وتستغل الخدمات الضعيفة"
+      ],
+      [
+        "Only by physically replacing disks",
+        "فقط باستبدال الأقراص"
+      ],
+      [
+        "Only when compiled by the victim",
+        "فقط عندما يترجمها الضحية"
+      ],
+      [
+        "They cannot spread between computers",
+        "لا تنتشر بين الأجهزة"
+      ]
+    ],
+    "e": [
+      "Worms can spread automatically; some also use email or removable media.",
+      "الديدان قد تنتشر آلياً وبعضها عبر البريد أو وسائط التخزين."
+    ]
+  },
+  {
+    "q": [
+      "What is a packer in malware analysis?",
+      "ما هو Packer في تحليل البرمجيات الخبيثة؟"
+    ],
+    "a": [
+      [
+        "A tool that compresses or transforms an executable and can obscure its code",
+        "أداة تضغط أو تحول الملف التنفيذي وقد تخفي كوده"
+      ],
+      [
+        "A DNS name server",
+        "خادم أسماء DNS"
+      ],
+      [
+        "A network firewall",
+        "جدار حماية"
+      ],
+      [
+        "A port scanner",
+        "ماسح منافذ"
+      ]
+    ],
+    "e": [
+      "Packers may be legitimate or used to complicate malware analysis.",
+      "قد يكون استخدام Packer مشروعاً أو لإعاقة تحليل البرمجيات الخبيثة."
+    ]
+  }
+];
+
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const L=["A","B","C","D"];
@@ -1245,7 +1867,7 @@ function makeQuiz(mount,key,pool,count){
   start(pool());
 }
 function showBest(){
-  [["c1","best-c1"],["c2","best-c2"],["c3","best-c3"],["c4","best-c4"]].forEach(([k,id])=>{const v=store.get("best-"+k);const e=document.getElementById(id);if(e&&v)e.innerHTML="Best: <b>"+v+"%</b> · أفضل نتيجة"});
+  [["c1","best-c1"],["c2","best-c2"],["c3","best-c3"],["c4","best-c4"],["mid","best-mid"]].forEach(([k,id])=>{const v=store.get("best-"+k);const e=document.getElementById(id);if(e&&v)e.innerHTML="Best: <b>"+v+"%</b> · أفضل نتيجة"});
 }
 
 /* ---------- stages ---------- */
@@ -1292,7 +1914,7 @@ function buildStages(){
 }
 
 /* ---------- tabs ---------- */
-const VIEWS=["ch1","ch2","ch3","ch4","exam"];
+const VIEWS=["ch1","ch2","ch3","ch4","mid","exam"];
 function show(t,push){
   if(!VIEWS.includes(t))t="ch1";
   VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==t;document.getElementById("tab-"+v).setAttribute("aria-selected",v===t)});
@@ -1305,6 +1927,7 @@ makeQuiz("quiz-c1","c1",()=>Q.c1);
 makeQuiz("quiz-c2","c2",()=>Q.c2);
 makeQuiz("quiz-c3","c3",()=>Q.c3);
 makeQuiz("quiz-c4","c4",()=>Q.c4);
+makeQuiz("quiz-mid","mid",()=>Q.mid);
 makeQuiz("quiz-exam","exam",()=>Q.c1.concat(Q.c2,Q.c3,Q.c4),20);
 showBest();
 show((location.hash||"#ch1").slice(1),false);
